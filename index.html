@@ -1,0 +1,2477 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work Persona — Assessment Gaya Kerja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12203A;
+    --ink-70:rgba(18,32,58,.7);
+    --ink-50:rgba(18,32,58,.5);
+    --paper:#F6F3EC;
+    --paper-2:#EFEAdf;
+    --card:#FFFFFF;
+    --slate:#5B6B82;
+    --amber:#B8863B;
+    --amber-deep:#8F6427;
+    --amber-soft:#EEDFC0;
+    --sage:#6E8768;
+    --sage-soft:#DCE6D8;
+    --line:rgba(18,32,58,.13);
+    --line-soft:rgba(18,32,58,.07);
+    --font-display:'Fraunces',serif;
+    --font-body:'Inter',sans-serif;
+    --font-mono:'IBM Plex Mono',monospace;
+    --shadow:0 20px 50px -25px rgba(18,32,58,.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--font-body);
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+  }
+  a{color:inherit;}
+  .mono{font-family:var(--font-mono);}
+
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:.5;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  #app{position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column;}
+
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 28px;
+    background:rgba(246,243,236,.86);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar .brand{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-70);
+  }
+  .topbar .count{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--amber-deep);
+    letter-spacing:.04em;
+  }
+  .progress-track{
+    position:sticky; top:57px; z-index:19;
+    height:3px; width:100%;
+    background:var(--line);
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--amber) 0%, var(--amber-deep) 100%);
+    width:0%;
+    transition:width .35s ease;
+  }
+  .topbar, .progress-track{display:none;}
+  #app.in-flow .topbar{display:flex;}
+  #app.in-flow .progress-track{display:block;}
+
+  .screen{
+    display:none;
+    flex:1;
+    width:100%;
+    max-width:760px;
+    margin:0 auto;
+    padding:56px 28px 90px;
+    animation:rise .45s ease;
+  }
+  .screen.active{display:flex; flex-direction:column;}
+  @keyframes rise{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--amber-deep);
+    margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px; height:1px;
+    background:var(--amber-deep);
+    display:inline-block;
+  }
+
+  #screen-welcome{justify-content:center; text-align:left; min-height:80vh;}
+  .hero-title{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(38px, 6vw, 64px);
+    line-height:1.05;
+    letter-spacing:-.01em;
+    margin:0 0 22px;
+  }
+  .hero-title em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--amber-deep);
+  }
+  .hero-sub{
+    font-size:17px;
+    line-height:1.65;
+    color:var(--ink-70);
+    max-width:52ch;
+    margin:0 0 34px;
+  }
+
+  /* --- justified body copy (rata kanan-kiri) --------------------- */
+  .hero-sub,
+  .instr-list li > span:last-child,
+  .section-body p,
+  .section-intro,
+  .axis-caption,
+  .trait-card .trait-desc,
+  .fuel-wrap p,
+  .env-card p,
+  .disclaimer,
+  .faq-item p,
+  .bullet-list li{
+    text-align:justify;
+    text-justify:inter-word;
+    -webkit-hyphens:auto;
+    hyphens:auto;
+  }
+
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:10px;
+    margin-bottom:40px;
+  }
+  .meta-chip{
+    font-family:var(--font-mono);
+    font-size:12px;
+    padding:8px 14px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    color:var(--ink-70);
+    background:var(--card);
+  }
+  .btn{
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:15.5px;
+    border:none;
+    cursor:pointer;
+    padding:16px 30px;
+    border-radius:8px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn-primary{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:var(--shadow);}
+  .btn-primary:active{transform:translateY(0);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink);
+    border:1px solid var(--line);
+  }
+  .btn-ghost:hover{border-color:var(--ink); background:var(--card);}
+  .btn:focus-visible{outline:2px solid var(--amber-deep); outline-offset:3px;}
+  .btn[disabled]{opacity:.35; cursor:not-allowed; pointer-events:none;}
+
+  .signature-mark{
+    margin-top:56px;
+    display:flex; align-items:center; gap:16px;
+  }
+  .signature-mark svg{flex-shrink:0;}
+  .signature-mark .label{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-50);
+    line-height:1.5;
+    letter-spacing:.02em;
+  }
+  .form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px 20px;
+    margin-bottom:34px;
+  }
+  .form-grid .span-2{grid-column:1 / -1;}
+  @media (max-width:600px){
+    .form-grid{grid-template-columns:1fr; gap:18px;}
+    .form-grid .span-2{grid-column:auto;}
+  }
+  .field label{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-50);
+    margin-bottom:8px;
+  }
+  .field input{
+    width:100%;
+    font-family:var(--font-body);
+    font-size:15px;
+    padding:13px 14px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--card);
+    color:var(--ink);
+  }
+  .field input:focus{
+    outline:none;
+    border-color:var(--amber-deep);
+  }
+  .field input::placeholder{color:var(--ink-50);}
+  /* remove the number spinner so Usia matches the other inputs */
+  .field input[type=number]{-moz-appearance:textfield;}
+  .field input[type=number]::-webkit-outer-spin-button,
+  .field input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+
+  .seg{display:flex; gap:10px;}
+  .seg-btn{
+    flex:1;
+    font-family:var(--font-body);
+    font-size:15px;
+    padding:13px 10px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--card);
+    color:var(--ink-70);
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease, color .15s ease;
+  }
+  .seg-btn:hover{border-color:var(--amber);}
+  .seg-btn:focus-visible{outline:2px solid var(--amber-deep); outline-offset:2px;}
+  .seg-btn.selected{
+    background:var(--amber-soft);
+    border-color:var(--amber-deep);
+    color:var(--amber-deep);
+    font-weight:600;
+  }
+
+  .instr-title{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(28px,4vw,38px);
+    margin:0 0 22px;
+  }
+  .instr-list{list-style:none; margin:0 0 34px; padding:0;}
+  .instr-list li{
+    display:flex; gap:16px;
+    padding:9px 0;
+    border-bottom:1px solid var(--line-soft);
+    font-size:15.5px;
+    line-height:1.4;
+    color:var(--ink-70);
+  }
+  .instr-list li .num{
+    font-family:var(--font-mono);
+    color:var(--amber-deep);
+    font-size:13px;
+    flex-shrink:0;
+    padding-top:2px;
+  }
+  .scale-legend{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-bottom:38px;
+  }
+  .scale-legend .sc{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 10px;
+    text-align:center;
+    background:var(--card);
+  }
+  .scale-legend .sc .n{
+    font-family:var(--font-mono);
+    font-size:20px;
+    color:var(--amber-deep);
+    display:block;
+    margin-bottom:6px;
+  }
+  .scale-legend .sc .t{font-size:12.5px; color:var(--ink-70); line-height:1.3;}
+  @media (max-width:560px){
+    .scale-legend{grid-template-columns:repeat(2,1fr);}
+  }
+
+  #screen-question{justify-content:center; min-height:70vh;}
+  .q-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:clamp(28px,5vw,48px);
+    box-shadow:var(--shadow);
+  }
+  .q-eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--ink-50);
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  .q-text{
+    font-family:var(--font-display);
+    font-weight:500;
+    font-size:clamp(23px,3.6vw,30px);
+    line-height:1.32;
+    margin:0 0 34px;
+  }
+  .choices{display:flex; flex-direction:column; gap:10px;}
+  .choice{
+    display:flex; align-items:center; gap:16px;
+    padding:16px 18px;
+    border:1.5px solid var(--line);
+    border-radius:11px;
+    background:transparent;
+    cursor:pointer;
+    text-align:left;
+    font-family:var(--font-body);
+    font-size:15.5px;
+    color:var(--ink);
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .choice:hover{border-color:var(--amber); background:var(--paper-2);}
+  .choice:focus-visible{outline:2px solid var(--amber-deep); outline-offset:2px;}
+  .choice .bullet{
+    width:20px; height:20px;
+    border-radius:50%;
+    border:1.5px solid var(--slate);
+    flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .choice .bullet::after{
+    content:"";
+    width:9px; height:9px;
+    border-radius:50%;
+    background:var(--amber-deep);
+    opacity:0;
+    transform:scale(.4);
+    transition:opacity .12s ease, transform .12s ease;
+  }
+  .choice.selected{
+    border-color:var(--amber-deep);
+    background:var(--amber-soft);
+  }
+  .choice.selected .bullet{border-color:var(--amber-deep);}
+  .choice.selected .bullet::after{opacity:1; transform:scale(1);}
+  .choice .num{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--ink-50);
+    margin-left:auto;
+    flex-shrink:0;
+  }
+  .q-nav{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:30px;
+  }
+  .q-hint{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-50);}
+
+  #screen-processing{align-items:center; justify-content:center; text-align:center; min-height:80vh;}
+  .proc-mark{
+    width:64px; height:64px;
+    border-radius:50%;
+    border:2px solid var(--line);
+    border-top-color:var(--amber-deep);
+    animation:spin 1s linear infinite;
+    margin:0 auto 30px;
+  }
+  @keyframes spin{ to{transform:rotate(360deg);} }
+  @media (prefers-reduced-motion: reduce){ .proc-mark{animation:none;} }
+  .proc-title{
+    font-family:var(--font-display);
+    font-size:24px;
+    margin:0 0 10px;
+  }
+  .proc-line{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--ink-50);
+    min-height:18px;
+  }
+
+  #screen-results{padding-top:20px;}
+  .result-hero{
+    text-align:center;
+    padding:44px 0 40px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .result-greeting{
+    font-family:var(--font-mono);
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--amber-deep);
+    margin:0;
+  }
+  .result-greeting .name-highlight{
+    font-weight:700;
+    text-decoration:underline;
+  }
+  .result-kicker{
+    font-family:var(--font-mono);
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--amber-deep);
+    margin:4px 0 0;
+  }
+  .persona-name{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(46px,9vw,86px);
+    letter-spacing:-.015em;
+    margin:6px 0 16px;
+    color:var(--ink);
+  }
+  .persona-tagline{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-weight:400;
+    font-size:clamp(14px,1.75vw,16px);
+    color:var(--amber-deep);
+    max-width:46ch;
+    margin:0 auto;
+    line-height:1.55;
+  }
+  .persona-keywords{
+    font-family:var(--font-mono);
+    font-weight:500;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-50);
+    margin:16px auto 0;
+  }
+
+  .section{margin-bottom:52px;}
+  .section-title{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:22px;
+    margin:0 0 20px;
+  }
+  .section-body p{
+    font-size:15.5px;
+    line-height:1.75;
+    color:var(--ink-70);
+    margin:0 0 14px;
+  }
+  .section-intro{
+    font-size:14.5px;
+    line-height:1.65;
+    color:var(--ink-50);
+    margin:0 0 20px;
+  }
+
+  .style-poles{
+    font-family:var(--font-mono);
+    font-size:13px;
+    letter-spacing:.1em;
+    color:var(--amber-deep);
+    margin:0 0 26px;
+  }
+
+  .axis-block{
+    margin-bottom:30px;
+    padding-bottom:28px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .axis-block:last-child{border-bottom:none; margin-bottom:0; padding-bottom:0;}
+  .axis-title{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:17.5px;
+    margin:0 0 10px;
+    color:var(--ink);
+  }
+  .axis-title .pole{color:var(--amber-deep);}
+  .axis-title .score{
+    font-family:var(--font-mono);
+    font-size:15.5px;
+    color:var(--ink);
+    font-weight:600;
+    margin-left:4px;
+  }
+  .axis-caption{
+    font-size:14.5px;
+    line-height:1.7;
+    color:var(--ink-70);
+    margin:0 0 16px;
+  }
+  .axis-track{
+    position:relative;
+    height:6px;
+    border-radius:3px;
+    background:var(--line);
+    margin:14px 0 10px;
+  }
+  /* the meter reads as a LEAN from the centre, not a progress fill:
+     the balance point sits at 50% and the bar grows outward from it */
+  .axis-fill{
+    position:absolute; top:0; height:100%;
+    border-radius:3px;
+    background:var(--amber);
+  }
+  .axis-track::before{
+    content:"";
+    position:absolute; left:50%; top:-5px; bottom:-5px;
+    width:1px;
+    background:var(--ink-50);
+    opacity:.4;
+  }
+  .axis-marker{
+    position:absolute; top:50%;
+    width:16px; height:16px;
+    background:var(--card);
+    border:3px solid var(--amber-deep);
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    box-shadow:0 2px 6px rgba(18,32,58,.25);
+  }
+  .axis-labels{
+    display:flex; justify-content:space-between;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--ink-50);
+  }
+  .axis-labels .axis-side{display:flex; flex-direction:column; gap:3px; min-width:0;}
+  .axis-labels .axis-side.right{text-align:right; align-items:flex-end;}
+  .axis-labels .axis-side b{font-weight:600; font-size:12.5px; color:var(--ink-70);}
+  .axis-labels .axis-side .raw{font-size:12px; color:var(--ink-70); font-weight:500;}
+  .axis-labels .axis-side.lead b{color:var(--amber-deep);}
+  .axis-balanced{
+    margin:14px 0 0;
+    padding:10px 13px;
+    border-left:2px solid var(--amber);
+    background:var(--paper-2);
+    border-radius:0 7px 7px 0;
+    font-size:13.5px;
+    line-height:1.6;
+    color:var(--ink-70);
+    text-align:justify;
+    text-justify:inter-word;
+  }
+
+  .trait-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+    gap:14px;
+  }
+  .trait-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:13px;
+    padding:22px;
+  }
+  .trait-card .trait-label{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:17.5px;
+    margin-bottom:10px;
+    color:var(--ink);
+  }
+  .trait-card .trait-desc{
+    font-size:14px;
+    line-height:1.65;
+    color:var(--ink-70);
+  }
+
+  .fuel-wrap{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:28px clamp(20px,4vw,32px);
+  }
+  .fuel-top{
+    display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:10px;
+    margin-bottom:16px;
+  }
+  .fuel-type{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:26px;
+    text-transform:uppercase;
+    letter-spacing:.01em;
+  }
+  .fuel-pct{
+    font-family:var(--font-mono);
+    font-size:20px;
+    color:var(--amber-deep);
+  }
+  .fuel-track{
+    height:10px;
+    border-radius:6px;
+    background:var(--line);
+    overflow:hidden;
+    margin-bottom:18px;
+  }
+  .fuel-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--sage), var(--amber-deep));
+    border-radius:6px;
+    width:0%;
+    transition:width .6s ease;
+  }
+  .fuel-wrap p{
+    font-size:15px;
+    line-height:1.75;
+    color:var(--ink-70);
+    margin:0 0 12px;
+  }
+  .fuel-wrap p:last-child{margin-bottom:0;}
+
+  .bullet-list{list-style:none; margin:0; padding:0;}
+  .bullet-list li{
+    display:list-item;
+    list-style:none;
+    position:relative;
+    padding:9px 0 9px 20px;
+    border-bottom:1px solid var(--line-soft);
+    font-size:15px;
+    line-height:1.55;
+    color:var(--ink-70);
+  }
+  .bullet-list li:last-child{border-bottom:none;}
+  .bullet-list li::before{
+    content:"";
+    position:absolute;
+    left:0; top:17px;
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--amber-deep);
+  }
+
+  .env-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+  }
+  @media (max-width:640px){ .env-grid{grid-template-columns:1fr;} }
+  .env-card{
+    border-radius:13px;
+    padding:22px;
+    font-size:14.5px;
+    line-height:1.7;
+  }
+  .env-card.support{background:var(--sage-soft); color:var(--ink-70);}
+  .env-card.less{background:var(--paper-2); color:var(--ink-70); border:1px solid var(--line);}
+  .env-card .env-title{
+    font-family:var(--font-mono);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+    color:var(--ink);
+  }
+  .env-card p{margin:0 0 10px;}
+  .env-card p:last-child{margin-bottom:0;}
+
+  .disclaimer{
+    font-size:12.5px;
+    line-height:1.6;
+    color:var(--ink-50);
+    border-top:1px solid var(--line);
+    padding-top:24px;
+    margin-top:20px;
+  }
+
+  .faq-section{
+    margin:8px 0 52px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:30px clamp(20px,4vw,32px) 12px;
+  }
+  .faq-section .section-title{margin-bottom:16px; color:var(--amber-deep);}
+  .faq-list{border-top:1px solid var(--line-soft);}
+  .faq-item{border-bottom:1px solid var(--line-soft);}
+  .faq-item summary{
+    cursor:pointer;
+    list-style:none;
+    padding:18px 34px 18px 0;
+    position:relative;
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:15px;
+    line-height:1.4;
+    color:var(--ink);
+  }
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::marker{content:"";}
+  .faq-item summary::after{
+    content:"+";
+    position:absolute;
+    right:4px; top:16px;
+    font-size:20px;
+    line-height:1;
+    color:var(--amber-deep);
+  }
+  .faq-item[open] summary::after{ content:"−"; }
+  .faq-item p{
+    margin:0 0 20px;
+    font-size:14.5px;
+    line-height:1.6;
+    color:var(--ink-70);
+    max-width:72ch;
+  }
+
+  .results-actions{
+    display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:44px 0 0;
+  }
+  .retake-wrap{
+    display:flex; justify-content:center;
+    margin:16px 0 10px;
+    padding-top:16px;
+  }
+  .btn-retake{
+    background:var(--amber-soft);
+    color:var(--amber-deep);
+    border:1px solid var(--line);
+  }
+  .btn-retake:hover{background:var(--paper-2); border-color:var(--amber-deep);}
+
+  footer.app-footer{
+    text-align:center;
+    padding:30px 20px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--ink-50);
+  }
+  .app-version{
+    margin-top:6px;
+    font-size:10px;
+    letter-spacing:.04em;
+    color:var(--ink-50);
+  }
+
+  /* back button — sits on the right of the question card */
+  .btn-back{
+    background:var(--paper-2);
+    color:var(--ink-70);
+    border:1px solid var(--line);
+    font-size:14.5px;
+    padding:13px 26px;
+  }
+  .btn-back:hover{background:var(--amber-soft); border-color:var(--amber-deep); color:var(--amber-deep);}
+  .q-card:focus{outline:none;}
+
+  /* required-field validation on the welcome screen */
+  .field label .req{color:var(--amber-deep);}
+  .field.invalid input{border-color:#B3261E;}
+  .field.invalid .seg-btn{border-color:#B3261E;}
+  .field-msg{display:none; margin-top:7px; font-size:12.5px; line-height:1.4; color:#B3261E;}
+  .field.invalid .field-msg{display:block;}
+
+  /* graceful degradation when the export libraries cannot load */
+  .export-note{
+    display:none; text-align:center;
+    font-size:12.5px; line-height:1.55; color:var(--ink-50);
+    margin:16px auto 0; max-width:52ch;
+  }
+  .export-note.show{display:block;}
+
+  .to-top{
+    position:fixed; right:22px; bottom:22px; z-index:30;
+    width:44px; height:44px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:17px; line-height:1;
+    cursor:pointer;
+    box-shadow:0 10px 24px -12px rgba(18,32,58,.55);
+    opacity:0; pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .to-top.show{opacity:1; pointer-events:auto;}
+  .to-top:hover{transform:translateY(-2px); border-color:var(--amber-deep); color:var(--amber-deep);}
+  .to-top:focus-visible{outline:2px solid var(--amber-deep); outline-offset:3px;}
+
+  @media (max-width:600px){
+    .topbar{padding:14px 18px;}
+    .screen{padding:34px 18px 70px;}
+    .to-top{right:14px; bottom:14px;}
+    /* iOS Safari zooms the whole page in when a focused input is
+       smaller than 16px, and never zooms back out */
+    .field input, .seg-btn{font-size:16px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <div class="topbar">
+    <span class="brand">Work Persona · Assessment</span>
+    <span class="count mono" id="topCount">01 / 40</span>
+  </div>
+  <div class="progress-track" id="progressTrack" role="progressbar" aria-label="Progres pengisian" aria-valuemin="0" aria-valuemax="40" aria-valuenow="0"><div class="progress-fill" id="progressFill"></div></div>
+
+  <!-- SCREEN 1: WELCOME -->
+  <section class="screen active" id="screen-welcome">
+    <div class="eyebrow">Work Persona Assessment</div>
+    <h1 class="hero-title">Discover Your<br><em>Work Persona</em></h1>
+    <p class="hero-sub">Dengan assessment ini, Anda akan mendapatkan gambaran mengenai Work Persona, seperti gaya kerja, dorongan kerja, karakteristik yang paling menonjol, kekuatan, potensi tantangan, serta kondisi lingkungan kerja yang dapat membantu Anda bekerja secara optimal.</p>
+    <div class="meta-row">
+      <span class="meta-chip">40 pernyataan</span>
+      <span class="meta-chip">± 8–10 menit</span>
+    </div>
+    <div class="form-grid">
+      <div class="field span-2" data-field="name">
+        <label for="participantName">Nama Lengkap <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="participantName" placeholder="Tulis nama lengkap Anda" autocomplete="name" required aria-required="true">
+        <p class="field-msg"></p>
+      </div>
+      <div class="field" data-field="gender">
+        <label id="genderLabel">Jenis Kelamin <span class="req" aria-hidden="true">*</span></label>
+        <div class="seg" id="genderGroup" role="radiogroup" aria-labelledby="genderLabel">
+          <button type="button" class="seg-btn" role="radio" aria-checked="false" data-value="Laki-laki">Laki-laki</button>
+          <button type="button" class="seg-btn" role="radio" aria-checked="false" data-value="Perempuan">Perempuan</button>
+        </div>
+        <p class="field-msg"></p>
+      </div>
+      <div class="field" data-field="age">
+        <label for="participantAge">Usia <span class="req" aria-hidden="true">*</span></label>
+        <input type="number" id="participantAge" placeholder="Contoh: 27" min="15" max="80" inputmode="numeric" required aria-required="true">
+        <p class="field-msg"></p>
+      </div>
+      <div class="field span-2" data-field="job">
+        <label for="participantJob">Pekerjaan <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="participantJob" placeholder="Contoh: Marketing Staff" autocomplete="organization-title" required aria-required="true">
+        <p class="field-msg"></p>
+      </div>
+      <div class="field" data-field="email">
+        <label for="participantEmail">Email <span class="req" aria-hidden="true">*</span></label>
+        <input type="email" id="participantEmail" placeholder="nama@perusahaan.com" autocomplete="email" inputmode="email" required aria-required="true">
+        <p class="field-msg"></p>
+      </div>
+      <div class="field" data-field="phone">
+        <label for="participantPhone">Nomor HP <span class="req" aria-hidden="true">*</span></label>
+        <input type="tel" id="participantPhone" placeholder="Contoh: 081234567890" autocomplete="tel" inputmode="tel" required aria-required="true">
+        <p class="field-msg"></p>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="btnStart">Mulai Assessment</button>
+  </section>
+
+  <!-- SCREEN 2: INSTRUCTIONS -->
+  <section class="screen" id="screen-instructions">
+    <h2 class="instr-title">Cara Mengisi Assessment</h2>
+    <ul class="instr-list">
+      <li><span class="num mono">01</span><span>Jawablah secara spontan berdasarkan kebiasaan Anda sehari-hari, bukan berdasarkan versi ideal diri Anda.</span></li>
+      <li><span class="num mono">02</span><span>Setiap pernyataan wajib dijawab sebelum Anda dapat melanjutkan ke pernyataan berikutnya.</span></li>
+      <li><span class="num mono">03</span><span>Anda dapat menjawab dengan mengklik pilihan, atau menekan tombol angka 1 sampai 4 pada keyboard.</span></li>
+    </ul>
+    <div class="eyebrow">Skala Jawaban</div>
+    <div class="scale-legend">
+      <div class="sc"><span class="n mono">1</span><span class="t">Sangat Tidak Sesuai</span></div>
+      <div class="sc"><span class="n mono">2</span><span class="t">Tidak Sesuai</span></div>
+      <div class="sc"><span class="n mono">3</span><span class="t">Sesuai</span></div>
+      <div class="sc"><span class="n mono">4</span><span class="t">Sangat Sesuai</span></div>
+    </div>
+    <button class="btn btn-primary" id="btnBeginQuestions">Lanjutkan ke Pernyataan</button>
+  </section>
+
+  <!-- SCREEN 3: QUESTIONS -->
+  <section class="screen" id="screen-question">
+    <div class="q-card" id="qCard" tabindex="-1" role="group" aria-labelledby="qEyebrow qText">
+      <div class="q-eyebrow" id="qEyebrow">Pernyataan 1 dari 40</div>
+      <p class="q-text" id="qText"></p>
+      <div class="choices" id="qChoices" role="radiogroup" aria-labelledby="qText"></div>
+      <div class="q-nav">
+        <span class="q-hint">Pilih salah satu jawaban untuk melanjutkan</span>
+        <button class="btn btn-back" id="btnBack">Kembali</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 4: PROCESSING -->
+  <section class="screen" id="screen-processing">
+    <div>
+      <div class="proc-mark"></div>
+      <p class="proc-title">Menyusun profil Work Persona Anda…</p>
+      <p class="proc-line mono" id="procLine">membaca respons</p>
+    </div>
+  </section>
+
+  <!-- SCREEN 5: RESULTS -->
+  <section class="screen" id="screen-results">
+    <div id="resultsPrintable">
+    <div class="result-hero">
+      <p class="result-greeting" id="rGreeting">Hi there</p>
+      <p class="result-kicker">This is your work persona</p>
+      <h1 class="persona-name" id="rPersonaName">—</h1>
+      <p class="persona-tagline" id="rPersonaTagline">—</p>
+      <p class="persona-keywords mono" id="rPersonaKeywords">—</p>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Overview</h3>
+      <div class="section-body" id="rWhatThisMeans"></div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Your Work Style</h3>
+      <p class="style-poles" id="rStylePoles">—</p>
+      <div id="rAxes"></div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Your Distinctive Traits</h3>
+      <p class="section-intro">Persona yang sama dapat muncul dengan karakter yang berbeda pada setiap orang. Berikut beberapa kecenderungan yang paling menonjol dalam profil Anda:</p>
+      <div class="trait-grid" id="rTraits"></div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Your Work Drive</h3>
+      <div class="fuel-wrap">
+        <div class="fuel-top">
+          <span class="fuel-type" id="rFuelType">—</span>
+          <span class="fuel-pct mono" id="rFuelPct">0%</span>
+        </div>
+        <div class="fuel-track"><div class="fuel-fill" id="rFuelFill"></div></div>
+        <div id="rFuelDesc"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Your Strengths</h3>
+      <ul class="bullet-list" id="rStrengths"></ul>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Potential Challenges</h3>
+      <div class="section-body" id="rChallenges"></div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Work Environment</h3>
+      <div class="env-grid">
+        <div class="env-card support">
+          <div class="env-title">Yang mendukung Anda</div>
+          <div id="rEnvSupport"></div>
+        </div>
+        <div class="env-card less">
+          <div class="env-title">Ketika kurang selaras</div>
+          <div id="rEnvLess"></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="disclaimer">Catatan: Hasil ini menggambarkan kecenderungan gaya kerja berdasarkan respons Anda pada assessment ini, bukan label kepribadian yang bersifat mutlak atau diagnosis psikologis.</p>
+    </div>
+
+    <div class="faq-section">
+      <h3 class="section-title">Frequently Asked Questions</h3>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Apa arti persentase pada bagian Your Work Style?</summary>
+          <p>Persentase menunjukkan posisi Anda di antara dua sisi pada satu aspek, dan keduanya selalu berjumlah 100%. Misalnya Directing 66% dan Self-Directed 34% berarti cara kerja Anda condong ke sisi Directing — bukan berarti Anda "66% seorang pemimpin". Angka skor di bawahnya adalah rata-rata jawaban Anda pada masing-masing sisi, dalam skala 1 sampai 4. Bila kedua sisi hampir seimbang, Anda akan melihat keterangan tambahan pada aspek tersebut; artinya Anda cukup luwes berpindah di antara keduanya, dan kecenderungan yang tertera sebaiknya dibaca sebagai kecondongan tipis.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Kalau saya masuk ke satu persona, apakah berarti saya tidak memiliki karakteristik persona lain?</summary>
+          <p>Tidak. Persona menunjukkan kecenderungan gaya kerja yang paling menonjol dari jawaban Anda. Anda tetap memiliki karakteristik persona lain dengan kadar yang berbeda-beda. Hasil ini menggambarkan kecenderungan utama Anda, bukan batasan atas kemampuan maupun cara Anda bekerja.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Apakah ada persona yang lebih baik daripada persona lainnya?</summary>
+          <p>Tidak. Setiap persona memiliki kekuatan, tantangan, dan kontribusi yang berbeda. Tidak ada persona yang secara umum lebih unggul, karena efektivitas seseorang lebih ditentukan oleh peran, tugas, dan lingkungan kerjanya.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Apakah persona saya bisa berubah?</summary>
+          <p>Bisa, tetapi umumnya tidak berubah drastis dalam waktu singkat. Pengalaman kerja, tuntutan peran, dan perkembangan diri dapat memengaruhi cara Anda bekerja, sehingga kecenderungan persona Anda dapat bergeser seiring waktu. Mengisi ulang assessment dalam waktu berdekatan pun dapat memberi hasil yang sedikit berbeda, terutama pada aspek yang skornya hampir seimbang.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Mengapa hasil ini terasa belum sepenuhnya menggambarkan diri saya?</summary>
+          <p>Hal ini wajar. Persona adalah ringkasan dari kecenderungan yang paling menonjol, sehingga tidak mungkin memuat seluruh sisi diri Anda dalam setiap situasi. Hasilnya juga bergantung pada cara Anda menjawab: bila sebagian jawaban menggambarkan diri yang Anda inginkan alih-alih kebiasaan Anda sehari-hari, gambarannya dapat bergeser. Selain itu, jika skor kedua sisi pada suatu aspek hampir seimbang, wajar apabila Anda merasa cocok dengan kedua-duanya.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Apa arti Work Drive pada hasil saya?</summary>
+          <p>Work Drive menggambarkan intensitas dorongan kerja Anda: seberapa besar energi, usaha, dan ketekunan yang biasanya Anda curahkan untuk mencapai tujuan. Hasilnya ditampilkan sebagai Driven atau Steady. Driven berarti Anda cenderung bekerja dengan intensitas tinggi dan terdorong oleh target, sedangkan Steady berarti Anda cenderung menjaga ritme yang stabil dan berkelanjutan. Keduanya bukan penilaian rajin atau malas, melainkan gambaran ritme kerja yang paling alami bagi Anda.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Apakah hasil assessment ini bisa dipakai untuk menentukan diterima atau tidaknya seseorang dalam suatu pekerjaan?</summary>
+          <p>Sebaiknya tidak dijadikan satu-satunya dasar keputusan. Hasil ini lebih tepat digunakan sebagai informasi tambahan untuk memahami gaya kerja, cara berkolaborasi, dan arah pengembangan seseorang — dilengkapi wawancara, penilaian kompetensi, serta rekam jejak kerjanya.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Apakah saya hanya bisa bekerja dengan baik di lingkungan kerja yang mendukung persona saya?</summary>
+          <p>Tidak. Lingkungan kerja yang disebutkan bukan syarat agar Anda dapat berkinerja baik, melainkan kondisi yang umumnya paling mendukung gaya kerja alami Anda. Di lingkungan yang berbeda, Anda tetap dapat beradaptasi dan bekerja secara efektif sesuai tuntutan peran maupun situasi.</p>
+        </details>
+      </div>
+    </div>
+
+    <div class="results-actions">
+      <button class="btn btn-primary" id="btnSavePdf">Simpan sebagai PDF</button>
+      <button class="btn btn-ghost" id="btnSaveImage">Simpan sebagai Gambar</button>
+    </div>
+    <p class="export-note" id="exportNote"></p>
+    <div class="retake-wrap">
+      <button class="btn btn-retake" id="btnRetake">Isi Ulang Assessment</button>
+    </div>
+  </section>
+
+  <footer class="app-footer">Work Persona Assessment<div class="app-version mono">v1.0.0</div></footer>
+</div>
+
+<button class="to-top" id="btnToTop" aria-label="Kembali ke atas halaman" title="Kembali ke atas">&#8593;</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================
+     1. QUESTION BANK — 40 items (backend mapping, never shown)
+
+     Each item carries:
+       id     stable item ID (never renumbered, never reordered)
+       text   item wording, verbatim
+       axis   'authority' | 'structure' | 'social' | 'drive'
+       code   sub-aspect code (drives the Distinctive Traits engine)
+       pole   the pole this item is KEYED to — a high Likert answer
+              adds its raw value to THIS pole, never to the opposite one
+       dir    +1 / -1 = how the item loads on its sub-aspect scale
+              (kept separate from `pole` so the sub-aspect stays
+              internally coherent even when two items keyed to the
+              same pole point in opposite directions)
+
+     Presentation order is randomised at runtime (see ORDER), but this
+     table is the single source of truth for scoring.
+     ============================================================ */
+  var QUESTIONS = [
+    /* --- Structure & Thinking Style : Systematic <-> Fluid --------- */
+    {id:1,  axis:'structure', code:'C', pole:'Systematic', dir: 1, text:"Saya lebih nyaman bekerja ketika tugas dan langkah kerja sudah tersusun dengan jelas."},
+    {id:2,  axis:'structure', code:'C', pole:'Fluid',      dir:-1, text:"Saya lebih nyaman langsung mulai mengerjakan tugas, lalu menyesuaikan cara kerjanya seiring berjalannya waktu."},
+    {id:3,  axis:'structure', code:'D', pole:'Systematic', dir: 1, text:"Saya cenderung memeriksa kembali bagian-bagian penting sebelum menganggap pekerjaan selesai."},
+    {id:4,  axis:'structure', code:'D', pole:'Fluid',      dir:-1, text:"Saya lebih mengutamakan hasil keseluruhan daripada memeriksa setiap detail pekerjaan."},
+    {id:5,  axis:'structure', code:'E', pole:'Systematic', dir: 1, text:"Ketika menghadapi masalah dalam pekerjaan, saya biasanya mempertimbangkan situasi terlebih dahulu sebelum bereaksi."},
+    {id:6,  axis:'structure', code:'E', pole:'Fluid',      dir:-1, text:"Ketika menghadapi situasi yang tidak terduga, saya cenderung mengikuti respons yang muncul secara spontan."},
+    {id:7,  axis:'structure', code:'R', pole:'Systematic', dir: 1, text:"Sebelum mengambil tindakan, saya biasanya mempertimbangkan beberapa langkah yang mungkin dilakukan."},
+    {id:8,  axis:'structure', code:'R', pole:'Fluid',      dir:-1, text:"Saya lebih suka memahami suatu pekerjaan sambil langsung mencobanya daripada memikirkannya terlalu lama sebelumnya."},
+
+    /* --- Authority & Control : Directing <-> Self-Directed --------- */
+    {id:9,  axis:'authority', code:'F', pole:'Self-Directed', dir:-1, text:"Saya cenderung menyesuaikan cara kerja saya dengan arahan dari atasan yang saya hormati."},
+    {id:10, axis:'authority', code:'F', pole:'Self-Directed', dir:-1, text:"Saya cenderung mengikuti cara kerja yang disarankan atasan ketika menentukan bagaimana pekerjaan dilakukan."},
+    {id:11, axis:'authority', code:'W', pole:'Self-Directed', dir:-1, text:"Saya lebih nyaman ketika batasan dan ekspektasi pekerjaan sudah ditentukan dengan jelas."},
+    {id:12, axis:'authority', code:'W', pole:'Self-Directed', dir: 1, text:"Saya dapat bekerja tanpa banyak arahan selama tujuan pekerjaan sudah jelas."},
+    {id:13, axis:'authority', code:'L', pole:'Directing',     dir: 1, text:"Dalam kerja tim, saya nyaman mengambil peran untuk menentukan arah atau pembagian tugas."},
+    {id:14, axis:'authority', code:'L', pole:'Directing',     dir: 1, text:"Ketika tim belum menentukan arah, saya cenderung mengambil inisiatif untuk mengarahkannya."},
+    {id:15, axis:'authority', code:'P', pole:'Directing',     dir: 1, text:"Saya lebih nyaman ketika dapat menentukan bagaimana pekerjaan dalam tim dijalankan."},
+    {id:16, axis:'authority', code:'P', pole:'Directing',     dir: 1, text:"Saya cenderung memberikan arahan ketika pekerjaan tim perlu mengikuti standar tertentu."},
+    {id:17, axis:'authority', code:'I', pole:'Directing',     dir: 1, text:"Ketika situasinya sudah cukup jelas, saya cenderung langsung mengambil keputusan."},
+    {id:18, axis:'authority', code:'I', pole:'Self-Directed', dir: 1, text:"Saya biasanya bisa mengambil keputusan tanpa perlu banyak meminta pendapat orang lain."},
+    {id:19, axis:'authority', code:'K', pole:'Directing',     dir: 1, text:"Ketika memiliki alasan yang kuat, saya cenderung tetap mempertahankan pandangan saya."},
+    {id:20, axis:'authority', code:'K', pole:'Directing',     dir: 1, text:"Saya cenderung menyampaikan pendapat ketika ada keputusan atau cara kerja yang menurut saya perlu diubah."},
+
+    /* --- Social Orientation : Connector <-> Independent ------------ */
+    {id:21, axis:'social', code:'B', pole:'Connector',   dir: 1, text:"Saya lebih menikmati kegiatan ketika dapat menjadi bagian dari suatu tim."},
+    {id:22, axis:'social', code:'B', pole:'Independent', dir:-1, text:"Saya tetap nyaman bekerja meskipun hanya berinteraksi dengan beberapa orang."},
+    {id:23, axis:'social', code:'O', pole:'Connector',   dir: 1, text:"Saya cenderung membangun hubungan kerja yang cukup dekat dengan orang-orang yang sering bekerja bersama saya."},
+    {id:24, axis:'social', code:'O', pole:'Independent', dir:-1, text:"Saya tidak selalu merasa perlu membangun hubungan yang dekat dengan orang-orang yang bekerja bersama saya."},
+    {id:25, axis:'social', code:'S', pole:'Connector',   dir: 1, text:"Saya cukup mudah memulai percakapan dengan orang yang baru saya kenal."},
+    {id:26, axis:'social', code:'S', pole:'Independent', dir:-1, text:"Saya tidak terlalu membutuhkan banyak interaksi sosial ketika berada di lingkungan baru."},
+    {id:27, axis:'social', code:'X', pole:'Connector',   dir: 1, text:"Saya menikmati kesempatan untuk menyampaikan pendapat ketika berada dalam tim."},
+    {id:28, axis:'social', code:'X', pole:'Independent', dir:-1, text:"Saya tetap nyaman bekerja meskipun kontribusi saya tidak menjadi perhatian utama tim."},
+
+    /* --- Work Drive : Driven <-> Steady ---------------------------- */
+    {id:29, axis:'drive', code:'A', pole:'Driven', dir: 1, text:"Saya terdorong ketika memiliki target yang menantang untuk dicapai."},
+    {id:30, axis:'drive', code:'A', pole:'Driven', dir: 1, text:"Saya menikmati kesempatan untuk meningkatkan hasil yang sudah saya capai sebelumnya."},
+    {id:31, axis:'drive', code:'G', pole:'Driven', dir: 1, text:"Saya nyaman dengan pekerjaan yang membutuhkan usaha dan konsentrasi tinggi."},
+    {id:32, axis:'drive', code:'G', pole:'Driven', dir: 1, text:"Saya cenderung tetap bertahan mengerjakan tugas meskipun pekerjaannya menguras tenaga."},
+    {id:33, axis:'drive', code:'N', pole:'Driven', dir: 1, text:"Saya lebih nyaman menuntaskan suatu pekerjaan sebelum beralih sepenuhnya ke pekerjaan lain."},
+    {id:34, axis:'drive', code:'N', pole:'Driven', dir: 1, text:"Saya cenderung terus mengerjakan suatu tugas sampai benar-benar selesai."},
+    {id:35, axis:'drive', code:'T', pole:'Driven', dir: 1, text:"Saya cenderung bergerak cepat ketika mengerjakan tugas yang sudah saya pahami."},
+    {id:36, axis:'drive', code:'T', pole:'Steady', dir:-1, text:"Saya biasanya menjaga ritme kerja yang stabil daripada terburu-buru menyelesaikan pekerjaan."},
+    {id:37, axis:'drive', code:'V', pole:'Driven', dir: 1, text:"Saya cenderung tetap aktif dan berenergi ketika menjalani berbagai aktivitas."},
+    {id:38, axis:'drive', code:'V', pole:'Steady', dir:-1, text:"Saya lebih nyaman mengatur energi agar dapat mempertahankan ritme kerja dalam waktu yang panjang."},
+    {id:39, axis:'drive', code:'Z', pole:'Driven', dir: 1, text:"Saya tertarik mencoba cara baru dalam mengerjakan sesuatu."},
+    {id:40, axis:'drive', code:'Z', pole:'Steady', dir:-1, text:"Saya lebih nyaman menggunakan pendekatan yang sudah saya kenal selama hasilnya masih baik."}
+  ];
+
+  var QUESTION_BY_ID = {};
+  QUESTIONS.forEach(function(q){ QUESTION_BY_ID[q.id] = q; });
+
+  var SCALE_LABELS = ["Sangat Tidak Sesuai","Tidak Sesuai","Sesuai","Sangat Sesuai"];
+
+  /* ============================================================
+     2. DISTINCTIVE TRAIT DICTIONARY — 14 axis subscales + 6 drive
+        subscales (20 total), 3 buckets each, 2-sentence descriptions
+     ============================================================ */
+  var DICT = {
+    F:{ low:{label:"Approval-Oriented", desc:"Anda cenderung menghargai penerimaan, apresiasi, dan hubungan positif dengan atasan atau pihak yang Anda kagumi. Anda kemungkinan merasa lebih termotivasi ketika kontribusi Anda diakui dan mendapat dukungan dari mereka yang Anda hormati."},
+        mid:{label:"Approval-Balanced", desc:"Anda dapat menghargai persetujuan dan apresiasi dari atasan, namun tetap merasa nyaman mempertahankan penilaian Anda sendiri. Anda kemungkinan tidak terlalu bergantung pada validasi eksternal untuk merasa yakin dengan keputusan Anda."},
+        high:{label:"Self-Reliant", desc:"Anda memiliki kecenderungan yang cukup kuat untuk tidak terlalu membutuhkan penerimaan atau persetujuan dari atasan maupun pihak yang Anda kagumi. Anda kemungkinan lebih nyaman mempertahankan penilaian Anda sendiri, bahkan ketika hal tersebut berbeda dari pandangan orang lain."}},
+    I:{ low:{label:"Deliberate", desc:"Anda memiliki kecenderungan untuk mempertimbangkan berbagai pilihan secara matang sebelum mengambil keputusan. Anda kemungkinan lebih nyaman meluangkan waktu untuk memastikan keputusan yang diambil sudah tepat."},
+        mid:{label:"Balanced Decision Making", desc:"Anda dapat mengambil keputusan dengan cukup cepat sambil tetap mempertimbangkan informasi yang relevan. Anda kemungkinan menyesuaikan kecepatan pengambilan keputusan tergantung pada tingkat kepentingan situasi."},
+        high:{label:"Decisive", desc:"Anda cenderung cepat dan mudah menentukan pilihan, serta nyaman mengambil keputusan tanpa perlu banyak pertimbangan tambahan. Anda kemungkinan merasa yakin dengan penilaian Anda sendiri dalam situasi yang menuntut respons cepat."}},
+    K:{ low:{label:"Accommodating", desc:"Anda cenderung tidak terlalu merasa perlu mempertahankan pendapat secara keras dan lebih terbuka terhadap perbedaan pandangan. Anda kemungkinan lebih memilih mencari titik temu daripada mempertahankan posisi Anda secara kaku."},
+        mid:{label:"Assertive-Balanced", desc:"Anda mampu mempertahankan pendapat ketika diperlukan, namun tetap dapat mempertimbangkan pandangan orang lain. Anda kemungkinan menyesuaikan ketegasan Anda tergantung pada seberapa penting isu yang dihadapi."},
+        high:{label:"Forceful", desc:"Anda cenderung tegas mempertahankan pendapat dan nyaman menyampaikan pandangan ketika menganggap sesuatu tidak tepat. Anda kemungkinan tidak ragu mengungkapkan ketidaksetujuan secara langsung ketika diperlukan."}},
+    L:{ low:{label:"Supportive", desc:"Anda cenderung lebih nyaman berkontribusi dalam kelompok tanpa harus menjadi pihak yang menentukan arah. Anda kemungkinan lebih menikmati peran mendukung dibandingkan memimpin secara langsung."},
+        mid:{label:"Situational Leader", desc:"Anda dapat mengambil peran memimpin ketika situasi atau kebutuhan kelompok mengharuskannya. Anda kemungkinan tidak selalu mencari posisi memimpin, namun bersedia mengambilnya saat dibutuhkan."},
+        high:{label:"Leadership-Oriented", desc:"Anda cenderung nyaman mengambil peran untuk menentukan arah dan memberikan arahan kepada kelompok. Anda kemungkinan sering dipandang sebagai sosok yang dapat diandalkan untuk memimpin suatu inisiatif."}},
+    P:{ low:{label:"Non-Controlling", desc:"Anda cenderung memberikan ruang kepada orang lain untuk menentukan cara mereka bekerja. Anda kemungkinan lebih percaya pada kemampuan orang lain untuk mengelola pekerjaannya sendiri."},
+        mid:{label:"Influential", desc:"Anda dapat memengaruhi cara orang lain bekerja ketika diperlukan, tanpa kebutuhan kuat untuk mengendalikan mereka sepenuhnya. Anda kemungkinan menggunakan pengaruh secara selektif, hanya ketika benar-benar dibutuhkan."},
+        high:{label:"Directive", desc:"Anda cenderung ingin memastikan orang lain mengikuti arah atau standar yang telah ditetapkan. Anda kemungkinan merasa penting untuk menjaga konsistensi cara kerja tim sesuai dengan ekspektasi Anda."}},
+    W:{ low:{label:"Guidance-Oriented", desc:"Anda cenderung menghargai petunjuk, ekspektasi, dan arahan yang jelas dalam bekerja. Anda kemungkinan merasa lebih percaya diri dan efektif ketika mengetahui secara pasti apa yang diharapkan dari Anda."},
+        mid:{label:"Guidance-Flexible", desc:"Anda dapat bekerja dengan arahan yang diberikan, namun tetap mampu menentukan cara kerja Anda sendiri. Anda kemungkinan tidak terlalu bergantung pada instruksi detail selama arah umum sudah jelas."},
+        high:{label:"Autonomous", desc:"Anda cenderung nyaman menentukan cara kerja sendiri dan tidak membutuhkan banyak petunjuk atau pengawasan. Anda kemungkinan lebih menyukai kebebasan untuk mengatur pendekatan kerja Anda sendiri."}},
+    B:{ low:{label:"Group-Independent", desc:"Anda cenderung nyaman bekerja tanpa harus menjadi bagian aktif dari suatu kelompok. Anda kemungkinan dapat tetap produktif meskipun bekerja secara terpisah dari keterlibatan kelompok yang intens."},
+        mid:{label:"Socially Flexible", desc:"Anda dapat menikmati keterlibatan kelompok, namun tidak selalu membutuhkannya untuk merasa nyaman bekerja. Anda kemungkinan menyesuaikan tingkat keterlibatan sosial Anda sesuai kebutuhan situasi."},
+        high:{label:"Group-Oriented", desc:"Anda cenderung menikmati menjadi bagian dari kelompok dan merasa nyaman dengan keterlibatan yang erat. Anda kemungkinan merasa lebih termotivasi ketika bekerja bersama orang lain dalam suatu tim."}},
+    O:{ low:{label:"Emotionally Independent", desc:"Anda cenderung nyaman menjaga hubungan kerja dalam batas yang tidak terlalu personal. Anda kemungkinan lebih fokus pada substansi pekerjaan dibandingkan kedekatan emosional dengan rekan kerja."},
+        mid:{label:"Relationally Balanced", desc:"Anda menghargai hubungan yang dekat, namun tetap nyaman menjaga batas personal. Anda kemungkinan dapat menyeimbangkan kehangatan dengan profesionalisme dalam hubungan kerja."},
+        high:{label:"Warm & Close", desc:"Anda cenderung menghargai kedekatan, kehangatan, dan hubungan interpersonal yang personal dalam bekerja. Anda kemungkinan merasa lebih nyaman ketika relasi kerja Anda melampaui sekadar hubungan profesional."}},
+    S:{ low:{label:"Selective Socializing", desc:"Anda cenderung memilih interaksi sosial secara selektif dan lebih mengutamakan kualitas dibandingkan kuantitas relasi. Anda kemungkinan lebih nyaman membangun hubungan kerja yang mendalam dengan sedikit orang."},
+        mid:{label:"Socially Adaptive", desc:"Anda dapat menyesuaikan diri dengan berbagai situasi sosial sesuai kebutuhan. Anda kemungkinan cukup luwes baik ketika berinteraksi dengan banyak orang maupun bekerja secara lebih tertutup."},
+        high:{label:"Socially Expansive", desc:"Anda cenderung nyaman berinteraksi dengan banyak orang dan mudah memperluas relasi. Anda kemungkinan menikmati kesempatan untuk mengenal dan bekerja dengan orang-orang baru."}},
+    X:{ low:{label:"Low Visibility Need", desc:"Anda cenderung nyaman berkontribusi tanpa harus menjadi pusat perhatian. Anda kemungkinan tidak terlalu membutuhkan pengakuan publik untuk merasa puas dengan pekerjaan yang Anda lakukan."},
+        mid:{label:"Visibility-Balanced", desc:"Anda menikmati apresiasi dan perhatian atas kontribusi Anda, namun tidak terlalu membutuhkannya. Anda kemungkinan tetap termotivasi bekerja baik meski tidak selalu mendapat sorotan."},
+        high:{label:"Socially Visible", desc:"Anda cenderung nyaman ketika kontribusi dan keberadaan Anda terlihat oleh orang lain. Anda kemungkinan merasa lebih termotivasi ketika hasil kerja Anda diakui secara terbuka."}},
+    C:{ low:{label:"Flexible Organizer", desc:"Anda cenderung tidak terlalu terikat pada keteraturan formal dan dapat bekerja secara fleksibel. Anda kemungkinan lebih nyaman menyesuaikan sistem kerja sesuai kebutuhan dibandingkan mengikuti struktur yang kaku."},
+        mid:{label:"Situationally Organized", desc:"Anda menyukai keteraturan ketika dibutuhkan, namun tetap fleksibel dalam menjalankannya. Anda kemungkinan menyesuaikan tingkat keteraturan tergantung pada tuntutan pekerjaan."},
+        high:{label:"Highly Organized", desc:"Anda memiliki kecenderungan yang sangat kuat untuk menjaga pekerjaan tetap rapi, teratur, dan terstruktur. Anda kemungkinan merasa lebih nyaman ketika informasi, tugas, dan proses memiliki tempat atau sistem yang jelas."}},
+    D:{ low:{label:"Big-Picture Oriented", desc:"Anda cenderung lebih nyaman melihat gambaran besar dibandingkan terlalu lama berfokus pada detail kecil. Anda kemungkinan lebih tertarik pada arah dan tujuan keseluruhan dibandingkan rincian teknis."},
+        mid:{label:"Detail-Balanced", desc:"Anda dapat memperhatikan detail ketika diperlukan tanpa kehilangan gambaran besar. Anda kemungkinan mampu berpindah antara perspektif menyeluruh dan perhatian pada rincian sesuai kebutuhan."},
+        high:{label:"Detail-Oriented", desc:"Anda cenderung memberikan perhatian besar terhadap ketepatan dan detail pekerjaan. Anda mungkin lebih mudah menangkap hal-hal kecil yang terlewat dan menikmati pekerjaan yang membutuhkan ketelitian serta kehati-hatian."}},
+    E:{ low:{label:"Emotionally Expressive", desc:"Anda cenderung lebih mudah menunjukkan respons emosional dalam situasi kerja. Anda kemungkinan lebih terbuka mengekspresikan apa yang Anda rasakan dibandingkan menyembunyikannya."},
+        mid:{label:"Emotionally Balanced", desc:"Anda dapat mengekspresikan emosi Anda, namun tetap mengendalikannya ketika situasi membutuhkan. Anda kemungkinan cukup fleksibel dalam menunjukkan maupun menahan respons emosional."},
+        high:{label:"Emotionally Controlled", desc:"Anda cenderung mampu menjaga respons emosional ketika menghadapi situasi kerja. Dalam kondisi yang menekan atau menantang, Anda kemungkinan lebih memilih mempertahankan ketenangan dan mengendalikan reaksi sebelum merespons."}},
+    R:{ low:{label:"Action-Oriented", desc:"Anda cenderung lebih nyaman belajar dan bergerak melalui tindakan langsung dibandingkan berpikir panjang terlebih dahulu. Anda kemungkinan lebih cepat mencoba sesuatu daripada merencanakannya secara mendetail."},
+        mid:{label:"Reflective-Balanced", desc:"Anda dapat berpikir dan merencanakan sebelum bertindak, namun tidak berlarut-larut dalam prosesnya. Anda kemungkinan menyeimbangkan antara perencanaan dan tindakan sesuai kebutuhan situasi."},
+        high:{label:"Reflective & Conceptual", desc:"Anda cenderung banyak berpikir dan merencanakan sebelum bertindak. Anda kemungkinan menikmati proses memahami suatu persoalan secara mendalam, mempertimbangkan berbagai kemungkinan, dan menyusun pendekatan sebelum mulai mengerjakannya."}}
+  };
+
+  var DRIVE_DICT = {
+    A:{ low:{label:"Contentment-Focused", desc:"Anda cenderung tidak terlalu terdorong untuk selalu mengungguli orang lain atau mengejar pencapaian tertinggi. Anda kemungkinan lebih nyaman menjalani pekerjaan dengan ritme dan standar yang Anda tentukan sendiri."},
+        mid:{label:"Growth-Balanced", desc:"Anda cukup termotivasi untuk mencapai hasil yang baik, namun tidak selalu terdorong untuk menjadi yang terbaik. Anda kemungkinan menyeimbangkan ambisi dengan kenyamanan dalam bekerja."},
+        high:{label:"Achievement-Driven", desc:"Anda cenderung memiliki dorongan kuat untuk menjadi seorang yang berhasil dan melakukan sesuatu lebih baik dari orang lain. Anda kemungkinan merasa termotivasi ketika ada standar tinggi yang perlu dicapai."}},
+    G:{ low:{label:"Measured Pace", desc:"Anda cenderung bekerja dengan tempo yang lebih santai dan menjaga energi Anda secara terukur. Anda kemungkinan lebih memilih ritme kerja yang berkelanjutan dibandingkan intensitas yang tinggi terus-menerus."},
+        mid:{label:"Consistently Engaged", desc:"Anda bekerja dengan cukup giat sesuai kebutuhan situasi. Anda kemungkinan dapat meningkatkan intensitas kerja ketika diperlukan tanpa harus selalu berada pada level tertinggi."},
+        high:{label:"Tireless Worker", desc:"Anda cenderung bekerja dengan intensitas tinggi dan dianggap tidak mengenal lelah dalam menjalani pekerjaan sehari-hari. Anda kemungkinan memiliki daya tahan kerja yang kuat, bahkan dalam periode yang menuntut banyak usaha."}},
+    N:{ low:{label:"Adaptive Multitasker", desc:"Anda cenderung dapat berpindah antar tugas secara fleksibel tanpa harus selalu menuntaskan satu pekerjaan sebelum memulai yang lain. Anda kemungkinan lebih nyaman menyesuaikan prioritas sesuai situasi yang berkembang."},
+        mid:{label:"Reliable Finisher", desc:"Anda cukup berkomitmen untuk menyelesaikan tugas yang telah dimulai. Anda kemungkinan dapat menyesuaikan tingkat ketuntasan tergantung pada tingkat kepentingan pekerjaan."},
+        high:{label:"Persistent & Goal-Oriented", desc:"Anda menunjukkan kecenderungan yang kuat untuk menyelesaikan apa yang telah dimulai dan mencapai hasil yang diinginkan. Anda mungkin lebih nyaman ketika dapat memberikan perhatian yang cukup sampai suatu pekerjaan benar-benar selesai."}},
+    T:{ low:{label:"Steady-Paced", desc:"Anda cenderung bekerja dengan tempo yang stabil dan tidak tergesa-gesa. Anda kemungkinan lebih nyaman menjaga ritme kerja yang konsisten dibandingkan bergegas menyelesaikan sesuatu."},
+        mid:{label:"Adaptive Pace", desc:"Anda dapat menyesuaikan tempo kerja Anda tergantung pada tuntutan situasi. Anda kemungkinan cukup nyaman baik bekerja dengan cepat maupun dengan ritme yang lebih santai."},
+        high:{label:"Fast-Paced", desc:"Anda cenderung terbiasa bekerja dan berbicara dengan tempo yang cepat. Anda kemungkinan merasa lebih produktif ketika dapat bergerak dan merespons sesuatu dengan segera."}},
+    V:{ low:{label:"Calm Energy", desc:"Anda cenderung menyalurkan energi Anda dengan cara yang lebih tenang dan terkendali. Anda kemungkinan tidak terlalu membutuhkan aktivitas fisik yang intens untuk merasa bersemangat dalam bekerja."},
+        mid:{label:"Balanced Energy", desc:"Anda cukup bersemangat dalam menjalani aktivitas sehari-hari tanpa harus selalu berenergi tinggi. Anda kemungkinan menyesuaikan tingkat energi Anda sesuai kebutuhan situasi."},
+        high:{label:"High-Energy", desc:"Anda cenderung memiliki banyak energi, semangat, dan gairah dalam menjalani aktivitas maupun pekerjaan. Anda kemungkinan mudah merasa antusias dan bersemangat dalam berbagai situasi."}},
+    Z:{ low:{label:"Consistency-Oriented", desc:"Anda cenderung nyaman dengan rutinitas dan menyukai konsistensi dalam cara kerja. Anda kemungkinan lebih memilih pendekatan yang telah terbukti dibandingkan terus-menerus mencoba hal baru."},
+        mid:{label:"Adaptively Open", desc:"Anda cukup adaptif terhadap perubahan tanpa harus selalu mencari variasi. Anda kemungkinan dapat menerima perubahan ketika dibutuhkan, namun juga nyaman dengan rutinitas yang stabil."},
+        high:{label:"Change-Embracing", desc:"Anda cenderung suka mencoba sesuatu yang baru dan dapat cepat menyesuaikan diri ketika perubahan diperlukan. Anda kemungkinan merasa lebih bersemangat ketika bekerja dalam situasi yang dinamis dan bervariasi."}}
+  };
+
+  var ALL_DICT = {};
+  Object.keys(DICT).forEach(function(k){ ALL_DICT[k] = DICT[k]; });
+  Object.keys(DRIVE_DICT).forEach(function(k){ ALL_DICT[k] = DRIVE_DICT[k]; });
+  var TRAIT_CODES = Object.keys(ALL_DICT); // 20 subscale codes eligible as distinctive traits
+
+  /* short quality-phrases used to generate strengths / environment / challenge sentences */
+  var PHRASE = {
+    F:{low:"menjaga hubungan baik dan mendapat pengakuan dari atasan", high:"bekerja tanpa terlalu bergantung pada persetujuan atasan"},
+    I:{low:"mempertimbangkan pilihan secara matang sebelum bertindak", high:"mengambil keputusan dengan cepat dan percaya diri"},
+    K:{low:"bersikap terbuka terhadap pandangan orang lain", high:"mempertahankan pendapat secara tegas saat diperlukan"},
+    L:{low:"berkontribusi secara suportif tanpa harus memimpin", high:"mengambil peran memimpin dan mengarahkan kelompok"},
+    P:{low:"memberi ruang bagi orang lain untuk bekerja dengan caranya sendiri", high:"memastikan orang lain mengikuti standar dan arahan yang jelas"},
+    W:{low:"bekerja optimal dengan petunjuk dan ekspektasi yang jelas", high:"menentukan cara kerja sendiri tanpa banyak pengawasan"},
+    B:{low:"bekerja produktif tanpa harus selalu menjadi bagian aktif kelompok", high:"berkontribusi aktif sebagai bagian dari kelompok"},
+    O:{low:"menjaga batas personal yang sehat dalam relasi kerja", high:"membangun kedekatan dan kehangatan dalam relasi kerja"},
+    S:{low:"membangun relasi kerja secara selektif dan bermakna", high:"memperluas jejaring dan relasi dengan mudah"},
+    X:{low:"berkontribusi baik tanpa perlu menjadi pusat perhatian", high:"tampil dan dikenali atas kontribusinya"},
+    C:{low:"bekerja fleksibel tanpa terikat keteraturan formal", high:"menjaga pekerjaan dan proses tetap rapi dan teratur"},
+    D:{low:"melihat gambaran besar tanpa terjebak detail kecil", high:"memperhatikan ketepatan dan detail dengan cermat"},
+    E:{low:"mengekspresikan respons emosional secara terbuka", high:"menjaga ketenangan dalam situasi yang menekan"},
+    R:{low:"belajar dan bergerak melalui tindakan langsung", high:"berpikir dan merencanakan secara mendalam sebelum bertindak"},
+    A:{low:"menjaga ritme kerja tanpa harus selalu mengejar pencapaian tertinggi", high:"mengejar pencapaian dan hasil terbaik dalam pekerjaan"},
+    G:{low:"bekerja dengan tempo yang lebih santai dan terjaga", high:"bekerja dengan intensitas tinggi dan daya tahan kerja yang kuat"},
+    N:{low:"berpindah antar tugas secara fleksibel tanpa harus selalu menuntaskannya", high:"menuntaskan pekerjaan yang telah dimulai hingga selesai"},
+    T:{low:"bekerja dengan tempo yang stabil dan tidak tergesa", high:"bekerja dengan tempo yang cepat dan responsif"},
+    V:{low:"menyalurkan energi dengan cara yang lebih tenang", high:"menjalani aktivitas dengan energi dan semangat tinggi"},
+    Z:{low:"menjaga konsistensi dan kenyamanan pada rutinitas", high:"terbuka terhadap perubahan dan variasi dalam bekerja"}
+  };
+
+  /* strength-framed phrases: PHRASE is worded for environment and
+     challenge sentences, which does not read correctly inside the
+     "Mampu ... / Terampil dalam ..." strength templates. Note that F
+     and W are reverse-keyed, so bucket 'low' here already means a
+     HIGH need for approval (F) and for rules/supervision (W). */
+  var STRENGTH_PHRASE = {
+    F:{low:"membangun hubungan kerja yang baik dengan atasan dan pihak yang lebih senior", high:"berpegang pada penilaian sendiri tanpa terlalu bergantung pada persetujuan atasan"},
+    I:{low:"mempertimbangkan pilihan secara matang sebelum mengambil keputusan", high:"mengambil keputusan dengan cepat dan percaya diri"},
+    K:{low:"bersikap terbuka terhadap pandangan yang berbeda", high:"menyampaikan pendapat secara tegas ketika diperlukan"},
+    L:{low:"berkontribusi secara suportif tanpa harus mengambil peran memimpin", high:"mengambil peran memimpin dan mengarahkan kelompok"},
+    P:{low:"memberi ruang bagi orang lain untuk bekerja dengan caranya sendiri", high:"memastikan orang lain bekerja sesuai standar dan arahan yang jelas"},
+    W:{low:"bekerja secara konsisten mengikuti petunjuk dan ekspektasi yang jelas", high:"menentukan cara kerja sendiri tanpa membutuhkan banyak pengawasan"},
+    B:{low:"tetap produktif meskipun bekerja tanpa keterlibatan kelompok yang intens", high:"berkontribusi aktif sebagai bagian dari kelompok"},
+    O:{low:"menjaga batas personal yang sehat dalam relasi kerja", high:"membangun kedekatan dan kehangatan dalam relasi kerja"},
+    S:{low:"membangun relasi kerja secara selektif dan mendalam", high:"memperluas jejaring dan relasi kerja dengan mudah"},
+    X:{low:"berkontribusi dengan baik tanpa perlu menjadi pusat perhatian", high:"tampil dan dikenali atas kontribusi yang diberikan"},
+    C:{low:"bekerja secara fleksibel tanpa terikat keteraturan yang formal", high:"menjaga pekerjaan dan prosesnya tetap rapi dan teratur"},
+    D:{low:"menjaga fokus pada gambaran besar tanpa terjebak pada detail kecil", high:"memperhatikan ketepatan dan detail secara cermat"},
+    E:{low:"menyampaikan respons dan perasaan secara terbuka", high:"menjaga ketenangan dalam situasi yang menekan"},
+    R:{low:"belajar dan bergerak melalui tindakan langsung", high:"berpikir dan merencanakan secara mendalam sebelum bertindak"},
+    A:{low:"menjaga ritme kerja tanpa terbebani tuntutan untuk selalu mengungguli orang lain", high:"mengejar pencapaian dan hasil terbaik dalam pekerjaan"},
+    G:{low:"menjaga energi kerja secara terukur dan berkelanjutan", high:"bekerja dengan intensitas tinggi dan daya tahan kerja yang kuat"},
+    N:{low:"berpindah antar tugas secara fleksibel sesuai prioritas yang berubah", high:"menuntaskan pekerjaan yang telah dimulai hingga selesai"},
+    T:{low:"bekerja dengan tempo yang stabil dan tidak tergesa-gesa", high:"bekerja dan merespons dengan tempo yang cepat"},
+    V:{low:"menyalurkan energi dengan cara yang lebih tenang dan terkendali", high:"menjalani aktivitas kerja dengan energi dan semangat yang tinggi"},
+    Z:{low:"menjaga konsistensi dan keandalan pada cara kerja yang sudah terbukti", high:"menerima perubahan dan variasi dalam bekerja"}
+  };
+
+  /* ============================================================
+     3. AXIS + PERSONA DEFINITIONS
+     ============================================================ */
+  var AXIS_DEFS = [
+    { key:'authority', label:'Authority & Control', subscales:['F','I','K','L','P','W'],
+      poleHigh:'Directing', poleLow:'Self-Directed',
+      captionHigh:'Anda cenderung nyaman mengambil keputusan, menentukan arah, dan memberi arahan ketika situasi membutuhkannya, tanpa terlalu bergantung pada pengawasan eksternal. Kejelasan atas siapa yang memegang kendali kemungkinan menjadi hal yang penting bagi Anda.',
+      captionLow:'Anda cenderung lebih nyaman berkontribusi di dalam arah yang telah ditetapkan dibandingkan menjadi pihak yang menetapkannya, dan tidak terlalu membutuhkan posisi untuk mengarahkan atau mengendalikan orang lain. Kejelasan mengenai apa yang diharapkan, arahan yang memadai, serta dukungan dari atasan kemungkinan membantu Anda bekerja dengan lebih percaya diri dan efektif.' },
+    { key:'structure', label:'Structure & Thinking Style', subscales:['C','D','E','R'],
+      poleHigh:'Systematic', poleLow:'Fluid',
+      captionHigh:'Anda cenderung sangat menyukai keteraturan, ketelitian, perencanaan, dan pendekatan kerja yang terstruktur. Kejelasan proses dan standar kerja kemungkinan menjadi hal yang penting bagi Anda.',
+      captionLow:'Anda cenderung fleksibel, spontan, dan lebih terbuka terhadap perubahan dibandingkan mengikuti prosedur yang kaku. Anda kemungkinan lebih nyaman menyesuaikan pendekatan kerja sesuai situasi yang dihadapi.' },
+    { key:'social', label:'Social Orientation', subscales:['B','O','S','X'],
+      poleHigh:'Connector', poleLow:'Independent',
+      captionHigh:'Anda cenderung nyaman berinteraksi dan membangun hubungan dengan orang lain, meskipun keterlibatan sosial bukan satu-satunya hal yang menentukan kenyamanan Anda dalam bekerja.',
+      captionLow:'Anda cenderung nyaman dengan relasi kerja yang lebih terbatas dan dapat bekerja secara produktif tanpa harus banyak bergantung pada keterlibatan sosial.' }
+  ];
+
+  var PERSONAS = {
+    "Directing|Systematic|Connector": {
+      name:"Orchestrator", meaning:"Seseorang yang menyelaraskan arah, orang, dan proses agar semuanya bergerak menuju tujuan yang sama.", keywords:"Alignment · Direction · Integration",
+      what:["Anda cenderung nyaman mengambil kendali sekaligus menjaga keteraturan dalam cara kerja tim. Anda tidak hanya menentukan arah, tetapi juga memastikan proses berjalan rapi dan orang-orang di dalamnya tetap terhubung satu sama lain.",
+            "Bagi Anda, sebuah tim dapat bergerak lebih efektif ketika ada seseorang yang menyelaraskan arah, struktur, dan hubungan antar orang secara bersamaan. Anda kemungkinan berkembang baik di posisi yang menuntut koordinasi lintas fungsi, di mana kejelasan proses dan kualitas relasi sama-sama menentukan hasil."],
+      strengths:["Mampu menyelaraskan arah kerja tim sekaligus menjaga keteraturan prosesnya.","Membangun koordinasi lintas fungsi dengan pendekatan yang terstruktur.","Nyaman mengambil kendali dalam situasi yang membutuhkan banyak koordinasi."],
+      challenge:["Anda dapat merasa perlu terlibat di banyak bagian proses sekaligus karena ingin memastikan segala sesuatunya berjalan sesuai standar yang Anda tetapkan. Dalam jangka panjang, kebiasaan ini dapat terasa melelahkan apabila tidak dikelola dengan baik atau tidak didelegasikan sebagian kepada orang lain.",
+                "Karena Anda cenderung nyaman mengambil kendali sekaligus menjaga hubungan, Anda mungkin juga merasa berat ketika harus mengambil keputusan yang berpotensi mengecewakan pihak lain. Dalam situasi tertentu, penting untuk mengenali kapan ketegasan lebih dibutuhkan dibandingkan menjaga keharmonisan semata."],
+      envSupport:["Anda kemungkinan akan lebih optimal dalam lingkungan yang membutuhkan koordinasi banyak pihak, di mana Anda diberi ruang untuk menetapkan struktur kerja sekaligus menjaga arah tim tetap selaras.",
+                   "Anda juga kemungkinan berkembang baik ketika diberi kepercayaan untuk memimpin proses kolaboratif, dengan akses terhadap informasi yang cukup untuk menjaga semua pihak tetap terhubung dan bergerak ke arah yang sama."],
+      envLess:["Ketika lingkungan kerja sangat longgar, tidak terstruktur, atau minim interaksi antar tim, kecenderungan Anda untuk menyelaraskan dan mengoordinasikan mungkin terasa kurang tersalurkan.",
+               "Jika Anda ditempatkan pada posisi yang tidak memiliki kewenangan untuk memengaruhi arah kerja atau struktur tim, Anda mungkin merasa sulit menyalurkan kebutuhan Anda untuk menjaga segala sesuatunya tetap teratur dan terhubung."]
+    },
+    "Directing|Systematic|Independent": {
+      name:"Builder", meaning:"Seseorang yang membangun arah, struktur, dan sistem kerja agar orang lain dapat bekerja secara lebih efektif.", keywords:"Structure · System · Effectiveness",
+      what:["Anda cenderung nyaman menentukan arah dan merancang sistem kerja yang rapi, namun lebih memilih menjalankannya secara mandiri daripada bergantung pada keterlibatan kelompok yang intens.",
+            "Bagi Anda, hasil kerja yang baik lahir dari struktur yang jelas dan otonomi untuk menjalankannya sesuai standar Anda sendiri. Anda kemungkinan berkembang baik dalam peran yang menuntut Anda merancang proses atau standar kerja, lalu menjalankannya dengan kewenangan yang cukup besar."],
+      strengths:["Merancang sistem dan struktur kerja yang jelas dan efektif.","Nyaman mengambil kendali serta bekerja secara mandiri dalam menjalankannya.","Menjaga standar kerja tetap konsisten dan terarah."],
+      challenge:["Anda dapat begitu fokus membangun sistem sehingga kurang memprioritaskan input atau keterlibatan orang lain dalam prosesnya. Dalam situasi tertentu, hal ini dapat membuat Anda kehilangan perspektif atau masukan berharga dari pihak lain yang sebenarnya relevan.",
+                "Karena Anda cenderung nyaman bekerja mandiri dengan standar tinggi, Anda mungkin juga kurang terbiasa menjelaskan proses berpikir Anda kepada orang lain. Penting untuk mengenali kapan kolaborasi dapat mempercepat hasil, dibandingkan terus menjalankan segala sesuatu seorang diri."],
+      envSupport:["Anda kemungkinan akan lebih optimal ketika diberi kewenangan untuk merancang cara kerja sendiri sambil tetap memegang arah keseluruhan proyek atau tim.",
+                   "Anda juga kemungkinan berkembang baik dalam lingkungan yang menghargai hasil kerja yang terstruktur dan konsisten, dengan ruang yang cukup untuk menjalankan sistem yang Anda bangun tanpa banyak campur tangan."],
+      envLess:["Ketika lingkungan menuntut kolaborasi intens dan keputusan selalu diambil bersama kelompok besar, ritme kerja Anda yang mandiri mungkin terasa kurang selaras.",
+               "Jika Anda ditempatkan dalam struktur yang berubah-ubah tanpa kejelasan arah, Anda mungkin merasa sulit membangun sistem kerja yang dapat diandalkan dalam jangka panjang."]
+    },
+    "Directing|Fluid|Connector": {
+      name:"Initiator", meaning:"Seseorang yang memicu perubahan, menggerakkan ide, dan menciptakan momentum untuk mendorong sesuatu menjadi nyata.", keywords:"Initiative · Momentum · Change",
+      what:["Anda cenderung cepat mengambil inisiatif dan nyaman menggerakkan orang lain untuk bertindak, sambil tetap fleksibel dalam cara mencapai hasil.",
+            "Bagi Anda, momentum lebih penting daripada kesempurnaan proses. Anda kemungkinan berkembang baik dalam situasi yang membutuhkan energi untuk memulai sesuatu yang baru dan mengajak orang lain bergerak bersama, tanpa terlalu terikat pada prosedur yang kaku."],
+      strengths:["Menggerakkan orang lain untuk bertindak dan menciptakan momentum.","Nyaman mengambil inisiatif dalam situasi yang berubah cepat.","Membangun kolaborasi sambil tetap fleksibel dalam pendekatan kerja."],
+      challenge:["Anda dapat begitu fokus menciptakan momentum sehingga kurang memprioritaskan detail proses atau struktur jangka panjang. Dalam situasi tertentu, hal ini dapat membuat sebagian pekerjaan terasa kurang tuntas atau kurang terdokumentasi dengan baik.",
+                "Karena Anda cenderung bergerak cepat dan fleksibel, Anda mungkin juga kurang sabar terhadap proses yang lambat atau prosedural. Penting untuk mengenali kapan kecepatan memberikan nilai tambah, dan kapan situasi justru membutuhkan kehati-hatian yang lebih besar."],
+      envSupport:["Anda kemungkinan akan lebih optimal ketika bekerja di lingkungan yang dinamis, membutuhkan inisiatif, dan memberi ruang bagi Anda untuk mencoba pendekatan baru bersama orang lain.",
+                   "Anda juga kemungkinan berkembang baik dalam tim yang terbuka terhadap eksperimen dan perubahan arah, di mana kontribusi Anda dalam memulai sesuatu dihargai sama besarnya dengan hasil akhirnya."],
+      envLess:["Ketika lingkungan menuntut kepatuhan ketat pada prosedur yang kaku dan minim ruang untuk fleksibilitas, kecenderungan Anda untuk bergerak cepat mungkin terasa terhambat.",
+               "Jika pekerjaan Anda menuntut banyak dokumentasi rinci atau proses persetujuan yang panjang sebelum bertindak, Anda mungkin merasa energi dan momentum Anda sulit tersalurkan."]
+    },
+    "Directing|Fluid|Independent": {
+      name:"Navigator", meaning:"Seseorang yang membuka jalan di tengah ketidakpastian dan menemukan arah ketika belum ada peta yang jelas.", keywords:"Direction · Uncertainty · Exploration",
+      what:["Anda cenderung nyaman mengambil kendali dalam situasi yang belum jelas arahnya, dan lebih memilih menjalaninya dengan cara Anda sendiri daripada bergantung pada struktur atau kelompok yang mapan.",
+            "Bagi Anda, ketidakpastian bukan sesuatu yang perlu dihindari, melainkan ruang untuk bereksplorasi. Anda kemungkinan berkembang baik ketika diberi keleluasaan untuk mengeksplorasi pendekatan baru dan mengambil keputusan secara mandiri di tengah situasi yang belum pasti."],
+      strengths:["Berani mengambil langkah di tengah situasi yang belum pasti.","Nyaman bekerja secara mandiri sambil tetap menentukan arah sendiri.","Adaptif terhadap perubahan dan pendekatan baru."],
+      challenge:["Anda dapat begitu terbiasa bergerak mandiri sehingga kurang nyaman ketika harus banyak berkoordinasi atau mengikuti proses yang sangat terstruktur. Dalam situasi tertentu, hal ini dapat membuat Anda terlihat sulit diprediksi oleh pihak lain yang terbiasa bekerja dengan struktur yang jelas.",
+                "Karena Anda cenderung mengambil keputusan secara mandiri di tengah ketidakpastian, Anda mungkin juga kurang memprioritaskan komunikasi terhadap rencana Anda kepada orang lain. Penting untuk mengenali kapan keterlibatan pihak lain justru dapat memperkuat langkah yang Anda ambil."],
+      envSupport:["Anda kemungkinan akan lebih optimal ketika diberi otonomi tinggi untuk mengeksplorasi arah baru tanpa banyak batasan struktural.",
+                   "Anda juga kemungkinan berkembang baik dalam lingkungan yang menghargai keberanian mengambil risiko dan memberi ruang untuk belajar dari percobaan yang belum tentu berhasil."],
+      envLess:["Ketika lingkungan sangat birokratis, terstruktur ketat, dan menuntut banyak koordinasi kelompok, kecenderungan eksploratif Anda mungkin terasa terkekang.",
+               "Jika Anda diharuskan mengikuti prosedur baku tanpa ruang untuk menyesuaikan pendekatan, Anda mungkin merasa sulit menyalurkan dorongan Anda untuk mencoba cara-cara baru."]
+    },
+    "Self-Directed|Systematic|Connector": {
+      name:"Coordinator", meaning:"Seseorang yang menjaga keteraturan, konsistensi, dan keberlangsungan proses maupun tim.", keywords:"Consistency · Stability · Continuity",
+      what:["Anda cenderung nyaman bekerja di dalam struktur dan arah kerja yang sudah jelas, tanpa merasa perlu menjadi pihak yang menetapkan arah tersebut. Anda tidak terlalu membutuhkan posisi untuk mengarahkan atau mengendalikan orang lain, tetapi tetap menikmati keterlibatan dengan orang-orang di sekitar Anda.",
+            "Anda cenderung berkontribusi dengan memastikan pekerjaan tetap terorganisasi, informasi dapat tersampaikan dengan baik, dan hubungan kerja berjalan secara positif. Bagi Anda, pekerjaan dapat berjalan lebih efektif ketika prosesnya tertata dan setiap orang dapat menjalankan perannya dengan baik."],
+      strengths:["Sangat terorganisasi dan mampu menjaga struktur kerja tetap jelas dan konsisten.","Dapat diandalkan untuk menjalankan arah dan standar kerja yang telah ditetapkan.","Mampu menggabungkan pemikiran yang mendalam dengan pendekatan kerja yang sistematis."],
+      challenge:["Anda dapat terlalu fokus pada keteraturan dan ketepatan sehingga membutuhkan waktu lebih lama untuk menyelesaikan pekerjaan, terutama ketika standar yang Anda tetapkan cukup tinggi. Anda juga mungkin merasa kurang nyaman ketika harus bekerja dalam situasi yang sangat spontan, ambigu, atau terus berubah tanpa struktur yang jelas.",
+                "Karena Anda cenderung menjaga standar kerja yang tinggi, Anda mungkin menahan diri untuk meminta kejelasan ketika arahan yang tersedia dirasa belum cukup, lalu berusaha menerjemahkannya sendiri. Dalam situasi tertentu, penting untuk mengenali kapan ketelitian memberikan nilai tambah dan kapan Anda justru perlu lebih awal meminta konfirmasi agar pekerjaan tidak berjalan ke arah yang keliru."],
+      envSupport:["Anda kemungkinan akan lebih optimal dalam lingkungan yang memiliki struktur, standar, dan ekspektasi kerja yang jelas. Sistem kerja yang terorganisasi, informasi yang terdokumentasi dengan baik, serta waktu yang cukup untuk melakukan pekerjaan secara teliti dapat membantu Anda menghasilkan performa terbaik.",
+                   "Anda juga kemungkinan akan nyaman ketika atasan dan rekan kerja mudah dihubungi untuk memberi arahan maupun umpan balik, sehingga Anda dapat memastikan pekerjaan berjalan sesuai harapan sekaligus menjaga hubungan kerja yang positif."],
+      envLess:["Ketika bekerja dalam lingkungan yang tidak terstruktur, sering berubah tanpa penjelasan yang jelas, atau mengharuskan keputusan dibuat secara spontan, Anda mungkin membutuhkan lebih banyak usaha untuk menyesuaikan diri. Anda cenderung berusaha menciptakan keteraturan sendiri agar pekerjaan tetap dapat berjalan dengan baik.",
+               "Jika lingkungan terlalu cepat dan menuntut penyelesaian segera tanpa cukup waktu untuk memeriksa detail, Anda juga mungkin merasa kualitas pekerjaan menjadi sulit dipertahankan. Dalam situasi seperti ini, penting untuk membedakan antara detail yang benar-benar penting dan detail yang dapat diselesaikan secara lebih sederhana agar ketelitian tidak menghambat fleksibilitas dan kecepatan kerja."]
+    },
+    "Self-Directed|Systematic|Independent": {
+      name:"Craftsman", meaning:"Seseorang yang menghasilkan karya berkualitas melalui ketelitian, keahlian, dan penguasaan terhadap pekerjaannya.", keywords:"Expertise · Precision · Quality",
+      what:["Anda cenderung nyaman bekerja secara fokus dan mendalam dengan standar kerja yang rapi dan teliti, tanpa harus banyak bergantung pada keterlibatan kelompok. Anda tidak merasa perlu mengarahkan orang lain, dan bekerja paling baik ketika ekspektasi terhadap hasil kerja Anda sudah jelas sejak awal.",
+            "Bagi Anda, kualitas kerja lahir dari fokus dan penguasaan mendalam terhadap suatu bidang. Anda kemungkinan berkembang baik dalam peran yang membutuhkan ketelitian dan konsistensi, di mana kualitas dan presisi menjadi prioritas utama dibandingkan kecepatan semata."],
+      strengths:["Menghasilkan pekerjaan dengan standar kualitas dan ketelitian yang tinggi.","Mampu bekerja fokus dalam waktu lama ketika standar dan ekspektasi sudah jelas.","Konsisten dalam menjaga keteraturan proses kerjanya."],
+      challenge:["Anda dapat begitu fokus pada standar kerja Anda sendiri sehingga kurang nyaman ketika harus banyak berkolaborasi atau menyesuaikan cara kerja dengan preferensi orang lain. Dalam situasi tertentu, hal ini dapat membuat proses kerja tim terasa lebih lambat karena Anda ingin memastikan segalanya sesuai standar Anda.",
+                "Karena Anda cenderung tenggelam dalam pekerjaan Anda sendiri, Anda mungkin jarang menyuarakan kebutuhan akan kejelasan arahan maupun bantuan meskipun sebenarnya dibutuhkan. Penting untuk mengenali kapan meminta konfirmasi lebih awal justru menghemat usaha dan membuat hasil kerja menjadi lebih baik."],
+      envSupport:["Anda kemungkinan akan lebih optimal ketika diberi ruang untuk bekerja mendalam pada satu bidang, dengan standar kerja dan ekspektasi yang dijelaskan secara rinci sejak awal.",
+                   "Anda juga kemungkinan berkembang baik dalam lingkungan yang menghargai keahlian dan penguasaan mendalam terhadap suatu bidang, dibandingkan lingkungan yang menuntut Anda terus-menerus berpindah tugas."],
+      envLess:["Ketika lingkungan menuntut kolaborasi intens dan pengambilan keputusan yang selalu melibatkan banyak pihak, ritme kerja Anda yang fokus dan mendalam mungkin terasa kurang selaras.",
+               "Jika Anda ditempatkan dalam situasi yang menuntut hasil cepat tanpa cukup waktu untuk memastikan ketelitian, Anda mungkin merasa standar kerja Anda sulit dipertahankan."]
+    },
+    "Self-Directed|Fluid|Connector": {
+      name:"Facilitator", meaning:"Seseorang yang menjembatani perbedaan perspektif dan membantu individu maupun tim berkolaborasi secara efektif.", keywords:"Connection · Collaboration · Bridging",
+      what:["Anda cenderung nyaman mengikuti arah yang ada sambil tetap fleksibel dalam caranya, dan menaruh perhatian besar pada kualitas hubungan dengan orang-orang di sekitar Anda.",
+            "Bagi Anda, pekerjaan berjalan lebih baik ketika orang-orang di dalamnya merasa nyaman dan proses dapat menyesuaikan diri dengan kebutuhan yang berubah. Anda kemungkinan berkembang baik dalam peran yang membutuhkan kemampuan menjembatani orang dan proses, terutama dalam situasi yang membutuhkan pendekatan yang luwes."],
+      strengths:["Menjembatani perbedaan perspektif agar orang dan proses dapat bekerja lebih lancar.","Fleksibel dalam menyesuaikan pendekatan sesuai situasi.","Membangun hubungan kerja yang hangat dan positif."],
+      challenge:["Anda dapat begitu mengutamakan keharmonisan hubungan sehingga kurang nyaman ketika harus mengambil sikap tegas yang berisiko mengganggu hubungan tersebut. Dalam situasi tertentu, hal ini dapat membuat Anda menunda keputusan yang sebenarnya perlu segera diambil.",
+                "Karena Anda cenderung fleksibel dalam pendekatan kerja, Anda mungkin juga kurang nyaman ketika harus mengikuti struktur yang sangat kaku dalam waktu lama. Penting untuk mengenali kapan ketegasan justru diperlukan demi kebaikan bersama."],
+      envSupport:["Anda kemungkinan akan lebih optimal ketika bekerja di lingkungan yang kolaboratif, fleksibel, dan menghargai hubungan interpersonal yang positif.",
+                   "Anda juga kemungkinan berkembang baik dalam tim yang memberi ruang untuk menyesuaikan pendekatan kerja sesuai kebutuhan orang-orang di dalamnya, tanpa harus terpaku pada satu cara kerja yang kaku."],
+      envLess:["Ketika lingkungan sangat kaku, kompetitif, atau minim interaksi antar orang, Anda mungkin merasa kurang leluasa menjalankan peran Anda.",
+               "Jika Anda ditempatkan dalam situasi yang menuntut keputusan tegas secara cepat tanpa ruang untuk mempertimbangkan dampaknya terhadap hubungan, Anda mungkin merasa tidak nyaman menjalaninya."]
+    },
+    "Self-Directed|Fluid|Independent": {
+      name:"Explorer", meaning:"Seseorang yang mengeksplorasi kemungkinan baru, belajar dari pengalaman, dan menemukan pendekatan yang lebih efektif.", keywords:"Curiosity · Learning · Experimentation",
+      what:["Anda cenderung fleksibel dalam pendekatan kerja dan lebih tertarik mencoba cara-cara baru dibandingkan terpaku pada satu jalur yang tetap. Anda tidak merasa perlu mengarahkan orang lain, dan cukup nyaman menjalankan arah yang sudah ditetapkan selama masih tersedia ruang untuk menyesuaikan caranya.",
+            "Bagi Anda, ruang untuk bereksplorasi lebih berarti daripada mengikuti prosedur yang kaku. Anda kemungkinan berkembang baik ketika tujuan yang ingin dicapai dijelaskan dengan gamblang, namun cara mencapainya tidak dipatok secara sempit."],
+      strengths:["Mengeksplorasi ide dan pendekatan baru dengan leluasa.","Cepat menyesuaikan diri ketika situasi atau prioritas berubah.","Belajar dari pengalaman dan menemukan cara kerja yang lebih efektif."],
+      challenge:["Anda dapat begitu terbiasa bekerja fleksibel sehingga kurang nyaman ketika harus mengikuti struktur yang sangat ketat atau rutinitas yang tetap. Dalam situasi tertentu, hal ini dapat membuat Anda terlihat kurang konsisten oleh pihak yang terbiasa dengan proses yang baku.",
+                "Karena Anda cenderung menyesuaikan cara kerja sambil berjalan, Anda mungkin kurang terbiasa mengomunikasikan perubahan pendekatan tersebut kepada orang lain. Penting untuk mengenali kapan struktur dan kejelasan arah justru dibutuhkan agar hasil kerja Anda dapat dipahami dan diandalkan oleh tim."],
+      envSupport:["Anda kemungkinan akan lebih optimal ketika tujuan kerja disampaikan dengan jelas, namun Anda tetap diberi keleluasaan untuk mencoba pendekatan yang berbeda dalam mencapainya.",
+                   "Anda juga kemungkinan berkembang baik dalam lingkungan yang menghargai ide-ide baru dan memberi ruang untuk mencoba pendekatan yang belum pernah dilakukan sebelumnya."],
+      envLess:["Ketika lingkungan sangat terstruktur, prosedural, dan minim ruang untuk eksplorasi, Anda mungkin merasa kurang nyaman menjalankannya.",
+               "Jika pekerjaan Anda menuntut kepatuhan ketat terhadap jadwal dan prosedur tetap, Anda mungkin merasa dorongan eksploratif Anda menjadi terbatas."]
+    }
+  };
+
+  /* ============================================================
+     4. STATE
+     ============================================================ */
+  var answers = {};          /* keyed by STABLE item id, never by position */
+  var ORDER = [];            /* randomised presentation order: array of item ids */
+  var currentIndex = 0;      /* index into ORDER, not into QUESTIONS */
+  var participantName = '';
+  var participantGender = '';
+  var participantAge = '';
+  var participantJob = '';
+  var participantEmail = '';
+  var participantPhone = '';
+  var lastResults = null;
+
+  /* ============================================================
+     4b. PRESENTATION ORDER — randomised per session
+
+     Randomisation affects ONLY the sequence items are shown in.
+     It never touches item text, item id, axis, sub-aspect, pole key,
+     scoring weight, or interpretation. Answers are stored against the
+     stable item id, so any two orderings with the same per-item
+     responses produce byte-identical scores.
+
+     The shuffle is constrained so that no two consecutive items come
+     from the same axis — this prevents blocks of one construct from
+     appearing back to back.
+     ============================================================ */
+  function shuffleInPlace(arr){
+    for(var i = arr.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+
+  function buildPresentationOrder(){
+    /* bucket item ids by axis, shuffled within each bucket */
+    var buckets = {};
+    QUESTIONS.forEach(function(q){
+      (buckets[q.axis] = buckets[q.axis] || []).push(q.id);
+    });
+    Object.keys(buckets).forEach(function(k){ shuffleInPlace(buckets[k]); });
+
+    /* greedy "always draw from the largest remaining axis that is not
+       the previous one" — guaranteed to leave no adjacent duplicates
+       for any distribution where max count <= ceil(n/2) */
+    var order = [];
+    var prevAxis = null;
+    while(order.length < QUESTIONS.length){
+      var avail = Object.keys(buckets).filter(function(k){ return buckets[k].length > 0; });
+      var cand = avail.filter(function(k){ return k !== prevAxis; });
+      if(!cand.length) cand = avail;
+      var maxLen = 0;
+      cand.forEach(function(k){ if(buckets[k].length > maxLen) maxLen = buckets[k].length; });
+      var top = cand.filter(function(k){ return buckets[k].length === maxLen; });
+      var axis = top[Math.floor(Math.random() * top.length)];
+      order.push(buckets[axis].shift());
+      prevAxis = axis;
+    }
+
+    /* polish: random constraint-preserving swaps so the sequence does
+       not settle into a predictable alternation pattern */
+    var axisOf = function(id){ return QUESTION_BY_ID[id].axis; };
+    var okAt = function(seq, pos){
+      var a = axisOf(seq[pos]);
+      if(pos > 0 && axisOf(seq[pos-1]) === a) return false;
+      if(pos < seq.length - 1 && axisOf(seq[pos+1]) === a) return false;
+      return true;
+    };
+    for(var attempt = 0; attempt < 400; attempt++){
+      var i = Math.floor(Math.random() * order.length);
+      var j = Math.floor(Math.random() * order.length);
+      if(i === j) continue;
+      var tmp = order[i]; order[i] = order[j]; order[j] = tmp;
+      if(!okAt(order, i) || !okAt(order, j)){
+        tmp = order[i]; order[i] = order[j]; order[j] = tmp; /* revert */
+      }
+    }
+    return order;
+  }
+
+  /* ============================================================
+     5. SCORING ENGINE (deterministic, driven by each item's KEY)
+
+     Two independent computations run off the same responses:
+
+     a) POLE SCORES — a raw Likert answer is added to the pole the item
+        is keyed to. No automatic reverse scoring: an item keyed 'Fluid'
+        adds to Fluid, an item keyed 'Systematic' adds to Systematic.
+        Because the poles hold different numbers of items, the two sides
+        are compared as MEAN PER ITEM (both stay on the 1-4 scale).
+
+     b) SUB-ASPECT SCORES — used only by the Distinctive Traits engine,
+        which is unchanged. Here `dir` applies, so each sub-aspect stays
+        on its original 2-8 range with a coherent direction.
+     ============================================================ */
+  function subAspectScore(q){
+    var raw = answers[q.id];
+    return q.dir === -1 ? (5 - raw) : raw;
+  }
+
+  function computeSubscales(){
+    var sub = {};
+    QUESTIONS.forEach(function(q){
+      sub[q.code] = (sub[q.code] || 0) + subAspectScore(q);
+    });
+    return sub;
+  }
+
+  function bucketOf(score){
+    if(score <= 3) return 'low';
+    if(score <= 6) return 'mid';
+    return 'high';
+  }
+
+  /* total + mean of the raw responses on every item keyed to `pole` */
+  function poleScore(axisKey, pole){
+    var total = 0, count = 0;
+    QUESTIONS.forEach(function(q){
+      if(q.axis === axisKey && q.pole === pole){
+        total += answers[q.id];
+        count += 1;
+      }
+    });
+    return { total:total, count:count, mean: count ? total / count : 0 };
+  }
+
+  /* Below this gap between the two pole means, the axis is reported as
+     near-balanced. The persona still resolves to one side (the eight
+     personas require a definite pole), but the participant is told the
+     lean is slight instead of being handed a verdict that the printed
+     numbers appear to contradict. */
+  var BALANCE_BAND = 0.20;
+
+  function computeAxis(sub, def){
+    var high = poleScore(def.key, def.poleHigh);
+    var low  = poleScore(def.key, def.poleLow);
+    var diff = high.mean - low.mean;               /* range -3 .. +3 */
+    var pole = diff > 0 ? def.poleHigh : def.poleLow;
+    /* share of the axis attributed to the high pole; the two shares are
+       complementary and always add up to 100. Derived from the GAP, not
+       from the raw ratio, so the full 0-100 range is reachable (a raw
+       ratio would be trapped between 20% and 80% because the Likert
+       floor is 1, not 0). */
+    var pct  = ((diff + 3) / 6) * 100;
+    var pctHigh = Math.round(pct);
+    var avg  = diff > 0 ? high.mean : low.mean;    /* mean of the winning pole, 1..4 */
+    return {
+      pole:pole, pct:pct, avg:avg, diff:diff, def:def,
+      pctHigh: pctHigh, pctLow: 100 - pctHigh,
+      pctWin: diff > 0 ? pctHigh : 100 - pctHigh,
+      balanced: Math.abs(diff) < BALANCE_BAND,
+      poleScores:{ high:high, low:low },
+      total:high.total + low.total
+    };
+  }
+
+  /* Work Drive keeps the ORIGINAL intensity index rather than a
+     head-to-head pole comparison. It sums the six drive sub-aspects
+     (A,G,N,T,V,Z), each 2-8, so the index runs 12-48 and is reported as
+     0-100%. A neutral respondent lands on 50%; 'Driven' needs > 60%.
+
+     The item keys are still honoured: for all 12 drive items `pole` and
+     `dir` coincide (every Driven item is +1, every Steady item is -1),
+     so a Steady answer pulls the index down by exactly as much as a
+     Driven answer pushes it up. Head-to-head means are still computed
+     below for reference. */
+  function computeWorkDrive(sub){
+    var codes = ['A','G','N','T','V','Z'];
+    var total = 0;
+    codes.forEach(function(c){ total += sub[c]; });
+    var pct = ((total - 12) / 36) * 100;
+    var fuelType = pct > 60 ? 'Driven' : 'Steady';
+    return {
+      total: total, pct: pct, fuelType: fuelType, codes: codes,
+      poleScores:{ driven: poleScore('drive','Driven'), steady: poleScore('drive','Steady') }
+    };
+  }
+
+  function selectDistinctiveTraits(sub){
+    var items = TRAIT_CODES.map(function(code){
+      var score = sub[code];
+      var bucket = bucketOf(score);
+      var distance = Math.abs(score - 5);
+      return { code:code, score:score, bucket:bucket, distance:distance };
+    });
+
+    var high = items.filter(function(i){ return i.bucket === 'high'; }).sort(function(a,b){ return b.score - a.score; });
+    var low  = items.filter(function(i){ return i.bucket === 'low'; }).sort(function(a,b){ return a.score - b.score; });
+    var mid  = items.filter(function(i){ return i.bucket === 'mid'; }).sort(function(a,b){ return b.distance - a.distance; });
+
+    var pool = [];
+    var hi = 0, lo = 0;
+    while(hi < high.length || lo < low.length){
+      if(hi < high.length) pool.push(high[hi++]);
+      if(lo < low.length) pool.push(low[lo++]);
+    }
+    var selected = pool.slice(0,5);
+    if(selected.length < 3){
+      var need = 3 - selected.length;
+      selected = selected.concat(mid.slice(0, need));
+    }
+    if(selected.length > 5) selected = selected.slice(0,5);
+    return selected;
+  }
+
+  function oppositeBucket(bucket){ return bucket === 'high' ? 'low' : 'high'; }
+
+  var STRENGTH_TEMPLATES = [
+    function(p){ return "Mampu " + p + "."; },
+    function(p){ return "Cenderung " + p + " secara alami."; },
+    function(p){ return "Memiliki kekuatan dalam " + p + "."; },
+    function(p){ return "Terampil dalam " + p + "."; }
+  ];
+
+  function buildStrengths(persona, traits, drive){
+    var list = persona.strengths.slice(0,3);
+    var extremeTraits = traits.filter(function(t){ return t.bucket !== 'mid'; });
+    extremeTraits.forEach(function(t, i){
+      if(list.length >= 6) return;
+      var phrase = STRENGTH_PHRASE[t.code][t.bucket];
+      var tmpl = STRENGTH_TEMPLATES[i % STRENGTH_TEMPLATES.length];
+      list.push(tmpl(phrase));
+    });
+    if(list.length < 4){
+      var driveWord = drive.fuelType === 'Driven' ? "dorongan kerja yang kuat dan intens dalam mengejar tujuan" : "dorongan kerja yang stabil dan terukur dalam menjalankan tanggung jawab";
+      list.push("Memiliki " + driveWord + ".");
+    }
+    return list.slice(0,6);
+  }
+
+  function buildChallenges(persona, traits){
+    var paras = persona.challenge.slice();
+    var extremes = traits.filter(function(t){ return t.bucket !== 'mid'; });
+    if(extremes.length){
+      var t = extremes[0];
+      var phrase = PHRASE[t.code][t.bucket];
+      paras[1] = paras[1] + " Selain itu, karena kecenderungan Anda dalam " + phrase + ", Anda mungkin membutuhkan penyesuaian tambahan ketika situasi menuntut pendekatan yang berbeda dari kebiasaan Anda.";
+    }
+    return paras;
+  }
+
+  function buildEnv(persona, traits){
+    var support = persona.envSupport.slice();
+    var less = persona.envLess.slice();
+    var extremes = traits.filter(function(t){ return t.bucket !== 'mid'; });
+    if(extremes.length){
+      var top = extremes[0];
+      var phrase = PHRASE[top.code][top.bucket];
+      var opp = oppositeBucket(top.bucket);
+      var oppPhrase = PHRASE[top.code][opp];
+      support[1] = support[1] + " Anda juga cenderung nyaman ketika dapat " + phrase + ".";
+      less[1] = less[1] + " Situasi yang terus-menerus menuntut Anda untuk " + oppPhrase + " mungkin terasa lebih menguras energi.";
+    }
+    return { support:support, less:less };
+  }
+
+  function buildDriveNarrative(sub, drive){
+    var para1 = drive.fuelType === 'Driven'
+      ? "Anda cenderung memiliki dorongan kerja yang tinggi dan mampu mempertahankan usaha ketika mengejar tujuan. Anda cukup gigih dalam menyelesaikan pekerjaan dan dapat memberikan energi yang besar ketika dibutuhkan."
+      : "Anda cenderung memiliki dorongan kerja yang stabil dan terukur, dengan ritme yang konsisten dalam menjalani pekerjaan sehari-hari. Ini bukan berarti Anda kurang bersemangat — Anda kemungkinan lebih memilih mempertahankan performa secara berkelanjutan dibandingkan bekerja dalam lonjakan intensitas yang tinggi.";
+
+    var items = drive.codes.map(function(c){
+      var score = sub[c];
+      var bucket = bucketOf(score);
+      return { code:c, score:score, bucket:bucket, distance:Math.abs(score-5) };
+    });
+    var extremes = items.filter(function(i){ return i.bucket !== 'mid'; }).sort(function(a,b){ return b.distance - a.distance; });
+
+    var para2;
+    if(extremes.length === 0){
+      para2 = "Keenam aspek yang membentuk dorongan kerja Anda relatif seimbang, sehingga dorongan Anda kemungkinan muncul secara proporsional tergantung situasi, tanpa satu kecenderungan yang mendominasi secara mencolok.";
+    } else {
+      var picks = extremes.slice(0,3);
+      var phrases = picks.map(function(p){ return PHRASE[p.code][p.bucket]; });
+      var joined;
+      if(phrases.length === 1){ joined = phrases[0]; }
+      else if(phrases.length === 2){ joined = phrases[0] + ", serta cenderung " + phrases[1]; }
+      else { joined = phrases[0] + ", cenderung " + phrases[1] + ", serta cenderung " + phrases[2]; }
+
+      var tItem = items.filter(function(i){ return i.code === 'T'; })[0];
+      var closing;
+      if(tItem.bucket === 'high'){
+        closing = "Anda kemungkinan juga terbiasa bergerak dengan tempo yang cepat dalam menyelesaikan tanggung jawab sehari-hari.";
+      } else if(tItem.bucket === 'low'){
+        closing = "Anda kemungkinan lebih memilih mempertahankan fokus secara mendalam dibandingkan bergegas menyelesaikan banyak hal sekaligus.";
+      } else {
+        closing = "Anda dapat menyesuaikan tempo kerja Anda sesuai kebutuhan situasi yang dihadapi.";
+      }
+      para2 = "Secara lebih spesifik, dorongan Anda paling terlihat pada kecenderungan untuk " + joined + ". " + closing;
+    }
+    return [para1, para2];
+  }
+
+  function runScoringEngine(){
+    var sub = computeSubscales();
+    var axisResults = AXIS_DEFS.map(function(def){ return computeAxis(sub, def); });
+    var key = axisResults.map(function(a){ return a.pole; }).join('|');
+    var persona = PERSONAS[key];
+    var drive = computeWorkDrive(sub);
+    var traits = selectDistinctiveTraits(sub);
+
+    return {
+      subscales: sub,
+      axes: axisResults,
+      personaKey: key,
+      persona: persona,
+      drive: drive,
+      traits: traits,
+      strengths: buildStrengths(persona, traits, drive),
+      challenges: buildChallenges(persona, traits),
+      env: buildEnv(persona, traits),
+      driveNarrative: buildDriveNarrative(sub, drive)
+    };
+  }
+
+  /* ============================================================
+     6. UI — NAVIGATION
+     ============================================================ */
+  var appEl = document.getElementById('app');
+  var screens = {
+    welcome: document.getElementById('screen-welcome'),
+    instructions: document.getElementById('screen-instructions'),
+    question: document.getElementById('screen-question'),
+    processing: document.getElementById('screen-processing'),
+    results: document.getElementById('screen-results')
+  };
+
+  /* The progress bar sticks directly beneath the top bar. The top bar's
+     height changes with viewport width (and with whether the webfont has
+     loaded), so the offset is measured rather than hard-coded — otherwise
+     a transparent gap opens up between the two while scrolling on phones. */
+  function syncStickyOffset(){
+    var topbar = document.querySelector('.topbar');
+    var track  = document.getElementById('progressTrack');
+    var h = topbar.getBoundingClientRect().height;
+    if(h > 0) track.style.top = Math.round(h) + 'px';
+  }
+  window.addEventListener('resize', syncStickyOffset);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(syncStickyOffset);
+
+  function showScreen(name){
+    Object.keys(screens).forEach(function(k){
+      screens[k].classList.toggle('active', k === name);
+    });
+    if(name === 'question'){
+      appEl.classList.add('in-flow');
+      syncStickyOffset();
+    } else {
+      appEl.classList.remove('in-flow');
+    }
+    window.scrollTo(0,0);
+  }
+
+  /* ---- participant details: every field is mandatory ---------- */
+  function fieldBox(key){ return document.querySelector('.field[data-field="' + key + '"]'); }
+  function setFieldError(key, msg){
+    var box = fieldBox(key);
+    box.classList.add('invalid');
+    box.querySelector('.field-msg').textContent = msg;
+  }
+  function clearFieldError(key){ fieldBox(key).classList.remove('invalid'); }
+
+  var genderGroup = document.getElementById('genderGroup');
+  genderGroup.addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.seg-btn') : null;
+    if(!btn) return;
+    participantGender = btn.getAttribute('data-value');
+    [].forEach.call(genderGroup.querySelectorAll('.seg-btn'), function(b){
+      var sel = (b === btn);
+      b.classList.toggle('selected', sel);
+      b.setAttribute('aria-checked', sel ? 'true' : 'false');
+    });
+    clearFieldError('gender');
+  });
+
+  ['name','age','job','email','phone'].forEach(function(key){
+    var input = fieldBox(key).querySelector('input');
+    input.addEventListener('input', function(){ clearFieldError(key); });
+  });
+
+  function readField(key){ return fieldBox(key).querySelector('input').value.trim(); }
+
+  function validateParticipant(){
+    var name  = readField('name');
+    var age   = readField('age');
+    var job   = readField('job');
+    var email = readField('email');
+    var phone = readField('phone');
+    var phoneDigits = phone.replace(/[^0-9]/g, '');
+    var errors = [];
+
+    ['name','gender','age','job','email','phone'].forEach(clearFieldError);
+
+    if(name.length < 2) errors.push(['name','Nama lengkap wajib diisi.']);
+    if(!participantGender) errors.push(['gender','Pilih salah satu.']);
+    if(!age || isNaN(Number(age)) || Number(age) < 15 || Number(age) > 80)
+      errors.push(['age','Usia wajib diisi, antara 15 dan 80.']);
+    if(job.length < 2) errors.push(['job','Pekerjaan wajib diisi.']);
+    if(!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(email)) errors.push(['email','Format email belum benar.']);
+    if(phoneDigits.length < 9 || phoneDigits.length > 15)
+      errors.push(['phone','Nomor HP wajib diisi dengan benar.']);
+
+    errors.forEach(function(e){ setFieldError(e[0], e[1]); });
+
+    if(errors.length){
+      var first = fieldBox(errors[0][0]);
+      var focusable = first.querySelector('input, .seg-btn');
+      if(focusable) focusable.focus({ preventScroll:true });
+      first.scrollIntoView({ behavior:'smooth', block:'center' });
+      return false;
+    }
+
+    participantName  = name;
+    participantAge   = age;
+    participantJob   = job;
+    participantEmail = email;
+    participantPhone = phone;
+    return true;
+  }
+
+  document.getElementById('btnStart').addEventListener('click', function(){
+    if(!validateParticipant()) return;
+    showScreen('instructions');
+  });
+  document.getElementById('btnBeginQuestions').addEventListener('click', function(){
+    currentIndex = 0;
+    if(!ORDER.length) ORDER = buildPresentationOrder();
+    showScreen('question');
+    reserveQuestionHeight();
+    renderQuestion();
+  });
+  document.getElementById('btnBack').addEventListener('click', function(){
+    if(currentIndex > 0){
+      currentIndex -= 1;
+      renderQuestion();
+    } else {
+      showScreen('instructions');
+    }
+  });
+  document.getElementById('btnRetake').addEventListener('click', function(){
+    var confirmed = window.confirm('Isi ulang assessment?\n\nSeluruh jawaban dan hasil Anda saat ini akan dihapus dan tidak dapat dikembalikan. Simpan hasil Anda terlebih dahulu jika diperlukan.');
+    if(!confirmed) return;
+    answers = {};
+    currentIndex = 0;
+    ORDER = buildPresentationOrder();   /* fresh random order each attempt */
+    showScreen('welcome');
+  });
+
+  /* ============================================================
+     SAVE AS IMAGE / SAVE AS PDF
+     Uses html2canvas to rasterize the printable results container
+     at a high scale (crisp, non-blurry output), then either
+     downloads the PNG directly or embeds it into a single-page
+     PDF sized exactly to the capture (preserves colors, gradients,
+     and the axis bars exactly as shown on screen).
+     ============================================================ */
+  /* The two export libraries come from a CDN. On networks that block it
+     the buttons would otherwise look normal and then fail with a generic
+     error, so check once and say plainly what is unavailable. */
+  function applyExportAvailability(){
+    var hasImg = typeof window.html2canvas === 'function';
+    var hasPdf = !!(window.jspdf && window.jspdf.jsPDF);
+    var imgBtn = document.getElementById('btnSaveImage');
+    var pdfBtn = document.getElementById('btnSavePdf');
+    var note   = document.getElementById('exportNote');
+    imgBtn.disabled = !hasImg;
+    pdfBtn.disabled = !hasPdf;
+    if(hasImg && hasPdf){
+      note.classList.remove('show');
+      note.textContent = '';
+      return false;
+    }
+    var missing = [];
+    if(!hasPdf) missing.push('PDF');
+    if(!hasImg) missing.push('Gambar');
+    note.textContent = 'Fitur simpan sebagai ' + missing.join(' dan ') + ' tidak tersedia karena komponen pendukungnya gagal dimuat — biasanya akibat koneksi internet terputus atau jaringan kantor yang memblokir sumber eksternal. Anda tetap dapat mencetak halaman ini melalui browser (Ctrl+P atau Cmd+P).';
+    note.classList.add('show');
+    return true;
+  }
+
+  function fileBaseName(){
+    var n = participantName ? participantName.trim().replace(/\s+/g,'-').toLowerCase() : 'hasil';
+    return 'work-persona-' + n;
+  }
+
+  /* Mobile browsers cap how large a canvas may be — iOS Safari refuses
+     anything past roughly 8000px on a side (and limits total area), and
+     silently hands back a blank bitmap instead of an error. The results
+     page is several thousand pixels tall, so at 3x it would blow straight
+     past that. Scale down just enough to stay inside a safe budget. */
+  function safeCaptureScale(width, height, dpr){
+    var MAX_DIM = 8000;
+    var MAX_AREA = 16777216;
+    var desired = Math.min(3, Math.max(2, dpr * 2));
+    var scale = Math.min(
+      desired,
+      MAX_DIM / width,
+      MAX_DIM / height,
+      Math.sqrt(MAX_AREA / (width * height))
+    );
+    return Math.max(0.75, scale);   /* degrade rather than fail outright */
+  }
+
+  function captureResultsCanvas(){
+    var target = document.getElementById('resultsPrintable');
+    var paperColor = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim() || '#F6F3EC';
+    var dpr = window.devicePixelRatio || 1;
+    var prev = {
+      padding: target.style.padding,
+      background: target.style.background,
+      boxSizing: target.style.boxSizing,
+      width: target.style.width,
+      maxWidth: target.style.maxWidth
+    };
+    var prevBodyOverflow = document.body.style.overflowX;
+
+    target.style.boxSizing = 'border-box';
+    target.style.padding = '56px 44px';
+    target.style.background = paperColor;
+
+    /* On a phone the results column is only ~330px wide, so a straight
+       capture yields an extremely tall sliver that also exceeds the canvas
+       size cap. Lay the capture out at a comfortable reading width instead:
+       the saved image then has sane proportions AND fits the budget. */
+    if(window.innerWidth < 800){
+      target.style.width = '760px';
+      target.style.maxWidth = 'none';
+      document.body.style.overflowX = 'hidden';
+    }
+
+    /* measured only after the width override, so the reflow is accounted for */
+    var capW = target.scrollWidth, capH = target.scrollHeight;
+
+    function restore(){
+      target.style.padding = prev.padding;
+      target.style.background = prev.background;
+      target.style.boxSizing = prev.boxSizing;
+      target.style.width = prev.width;
+      target.style.maxWidth = prev.maxWidth;
+      document.body.style.overflowX = prevBodyOverflow;
+    }
+
+    return html2canvas(target, {
+      scale: safeCaptureScale(capW, capH, dpr),
+      width: capW,
+      windowWidth: Math.max(capW, window.innerWidth),
+      backgroundColor: paperColor,
+      useCORS: true,
+      logging: false
+    }).then(function(canvas){
+      restore();
+      return canvas;
+    }, function(err){
+      restore();
+      throw err;
+    });
+  }
+
+  function withBusyButton(btn, busyLabel, fn){
+    var original = btn.textContent;
+    btn.textContent = busyLabel;
+    btn.disabled = true;
+    fn().catch(function(err){
+      console.error(err);
+      window.alert('Gagal memproses. Silakan coba lagi.');
+    }).finally(function(){
+      btn.textContent = original;
+      btn.disabled = false;
+    });
+  }
+
+  document.getElementById('btnSaveImage').addEventListener('click', function(){
+    var btn = this;
+    withBusyButton(btn, 'Menyiapkan gambar...', function(){
+      return captureResultsCanvas().then(function(canvas){
+        var link = document.createElement('a');
+        link.download = fileBaseName() + '.png';
+        link.href = canvas.toDataURL('image/png', 1.0);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+    });
+  });
+
+  /* ------------------------------------------------------------
+     Text-based PDF export: built directly from the scoring result
+     object (not a screenshot), so all text stays selectable and
+     copyable, and content flows across multiple pages naturally.
+     ------------------------------------------------------------ */
+  function buildResultsPdf(r){
+    var jsPDFCtor = window.jspdf.jsPDF;
+    var pdf = new jsPDFCtor({ unit:'pt', format:'a4' });
+    var pageWidth = pdf.internal.pageSize.getWidth();
+    var pageHeight = pdf.internal.pageSize.getHeight();
+    var marginX = 50;
+    var marginTop = 56;
+    var marginBottom = 56;
+    var maxWidth = pageWidth - marginX * 2;
+    var y = marginTop;
+
+    var INK = [40,34,26];
+    var INK_SOFT = [96,88,78];
+    var AMBER = [143,100,39];
+    var LINE = [224,214,198];
+
+    function ensureSpace(h){
+      if(y + h > pageHeight - marginBottom){
+        pdf.addPage();
+        y = marginTop;
+      }
+    }
+    function heading(text, size){
+      ensureSpace(size + 12);
+      pdf.setFont('helvetica','bold');
+      pdf.setFontSize(size);
+      pdf.setTextColor(INK[0],INK[1],INK[2]);
+      pdf.text(text, marginX, y);
+      y += size + 12;
+    }
+    function subheading(text){
+      ensureSpace(22);
+      pdf.setFont('helvetica','bold');
+      pdf.setFontSize(13);
+      pdf.setTextColor(AMBER[0],AMBER[1],AMBER[2]);
+      pdf.text(text, marginX, y);
+      y += 22;
+    }
+    /* draws one line with word spacing stretched so it ends exactly
+       at the right margin (rata kanan-kiri). The final line of each
+       paragraph, and any line with a single word, stays flush left. */
+    function drawJustifiedLine(line, x, width){
+      var words = line.split(/\s+/).filter(function(w){ return w.length; });
+      if(words.length < 2){ pdf.text(line, x, y); return; }
+      var wordsWidth = 0;
+      words.forEach(function(w){ wordsWidth += pdf.getTextWidth(w); });
+      var gap = (width - wordsWidth) / (words.length - 1);
+      var naturalGap = pdf.getTextWidth(' ');
+      // guard against absurd stretching on very short lines
+      if(gap <= 0 || gap > naturalGap * 4){ pdf.text(line, x, y); return; }
+      var cx = x;
+      words.forEach(function(w, i){
+        pdf.text(w, cx, y);
+        cx += pdf.getTextWidth(w) + gap;
+      });
+    }
+    function paragraph(text, opts){
+      opts = opts || {};
+      var color = opts.color || INK;
+      pdf.setFont('helvetica', opts.bold ? 'bold' : 'normal');
+      pdf.setFontSize(opts.size || 10.5);
+      pdf.setTextColor(color[0],color[1],color[2]);
+      var lh = opts.lineHeight || 15;
+      var indent = opts.indent || 0;
+      var width = maxWidth - indent;
+      var justify = opts.justify === undefined ? true : opts.justify;
+      var lines = pdf.splitTextToSize(text, width);
+      lines.forEach(function(line, idx){
+        ensureSpace(lh);
+        var isLast = (idx === lines.length - 1);
+        if(justify && !isLast){
+          drawJustifiedLine(line, marginX + indent, width);
+        } else {
+          pdf.text(line, marginX + indent, y);
+        }
+        y += lh;
+      });
+      y += opts.spacingAfter === undefined ? 8 : opts.spacingAfter;
+    }
+    function bulletItem(text){
+      pdf.setFont('helvetica','normal');
+      pdf.setFontSize(10.5);
+      pdf.setTextColor(INK[0],INK[1],INK[2]);
+      var width = maxWidth - 14;
+      var lines = pdf.splitTextToSize(text, width);
+      lines.forEach(function(line, idx){
+        ensureSpace(15);
+        if(idx === 0){ pdf.text('\u2022', marginX, y); }
+        if(idx === lines.length - 1){
+          pdf.text(line, marginX + 14, y);
+        } else {
+          drawJustifiedLine(line, marginX + 14, width);
+        }
+        y += 15;
+      });
+      y += 5;
+    }
+    function divider(){
+      ensureSpace(22);
+      pdf.setDrawColor(LINE[0],LINE[1],LINE[2]);
+      pdf.line(marginX, y, pageWidth - marginX, y);
+      y += 20;
+    }
+
+    // Header / greeting
+    pdf.setFont('helvetica','normal');
+    pdf.setFontSize(10);
+    pdf.setTextColor(AMBER[0],AMBER[1],AMBER[2]);
+    ensureSpace(14);
+    pdf.text(participantName ? ('Hi ' + participantName) : 'Hi there', marginX, y);
+    y += 14;
+    pdf.text('This is your work persona', marginX, y);
+    y += 14;
+    var metaBits = [];
+    if(participantName) metaBits.push(participantName);
+    if(participantAge)  metaBits.push(participantAge + ' tahun');
+    if(participantJob)  metaBits.push(participantJob);
+    if(metaBits.length){
+      pdf.setFontSize(9);
+      pdf.setTextColor(INK_SOFT[0],INK_SOFT[1],INK_SOFT[2]);
+      pdf.text(metaBits.join('  ·  '), marginX, y);
+      y += 12;
+    }
+    y += 16;
+
+    heading(r.persona.name, 24);
+    paragraph(r.persona.meaning, { size:11, color:AMBER, lineHeight:15, spacingAfter:8, justify:false });
+    if(r.persona.keywords){
+      paragraph(r.persona.keywords.toUpperCase(), { size:8.5, color:INK_SOFT, lineHeight:12, spacingAfter:14, justify:false });
+    }
+    divider();
+
+    subheading('Overview');
+    r.persona.what.forEach(function(p){ paragraph(p); });
+    divider();
+
+    subheading('Your Work Style');
+    paragraph(r.axes.map(function(a){ return a.pole.toUpperCase(); }).join('  •  '), { justify:false, bold:true, size:11, spacingAfter:12 });
+    r.axes.forEach(function(a){
+      var def = a.def;
+      var caption = a.pole === def.poleHigh ? def.captionHigh : def.captionLow;
+      paragraph(def.label + ' — ' + a.pole + ' (' + a.pctWin + '%)', { justify:false, bold:true, size:11, spacingAfter:4 });
+      paragraph(def.poleLow + ' ' + a.pctLow + '% (skor ' + a.poleScores.low.mean.toFixed(2) + ')' +
+                '   ·   ' + def.poleHigh + ' ' + a.pctHigh + '% (skor ' + a.poleScores.high.mean.toFixed(2) + ')',
+                { justify:false, size:9, color:INK_SOFT, lineHeight:13, spacingAfter:6 });
+      if(a.balanced){
+        paragraph('Catatan: kedua sisi pada aspek ini hampir seimbang, sehingga kecenderungan di atas sebaiknya dibaca sebagai kecondongan tipis, bukan ciri yang menetap.',
+                  { size:9, color:INK_SOFT, lineHeight:13, spacingAfter:6 });
+      }
+      paragraph(caption, { spacingAfter:14 });
+    });
+    divider();
+
+    subheading('Your Distinctive Traits');
+    r.traits.forEach(function(t){
+      var entry = ALL_DICT[t.code][t.bucket];
+      paragraph(entry.label, { justify:false, bold:true, size:11, spacingAfter:3 });
+      paragraph(entry.desc, { spacingAfter:12 });
+    });
+    divider();
+
+    subheading('Your Work Drive');
+    paragraph(r.drive.fuelType + '  —  ' + r.drive.pct.toFixed(1) + '%', { justify:false, bold:true, size:11, spacingAfter:8 });
+    r.driveNarrative.forEach(function(p){ paragraph(p); });
+    divider();
+
+    subheading('Your Strengths');
+    r.strengths.forEach(function(s){ bulletItem(s); });
+    y += 6;
+    divider();
+
+    subheading('Potential Challenges');
+    r.challenges.forEach(function(p){ paragraph(p); });
+    divider();
+
+    subheading('Work Environment — Yang Mendukung Anda');
+    r.env.support.forEach(function(p){ paragraph(p); });
+    y += 6;
+    subheading('Work Environment — Ketika Kurang Selaras');
+    r.env.less.forEach(function(p){ paragraph(p); });
+    divider();
+
+    paragraph('Catatan: Hasil ini menggambarkan kecenderungan gaya kerja berdasarkan respons Anda pada assessment ini, bukan label kepribadian yang bersifat mutlak atau diagnosis psikologis.', { size:9, color:INK_SOFT, lineHeight:12.5, spacingAfter:0 });
+
+    pdf.save(fileBaseName() + '.pdf');
+  }
+
+  document.getElementById('btnSavePdf').addEventListener('click', function(){
+    var btn = this;
+    withBusyButton(btn, 'Menyiapkan PDF...', function(){
+      return new Promise(function(resolve, reject){
+        try{
+          buildResultsPdf(lastResults);
+          resolve();
+        } catch(err){
+          reject(err);
+        }
+      });
+    });
+  });
+
+
+  function updateProgress(){
+    var answeredIdx = currentIndex + 1;
+    var pct = (answeredIdx / QUESTIONS.length) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    var n = String(answeredIdx).padStart(2,'0');
+    document.getElementById('topCount').textContent = n + ' / 40';
+    var track = document.getElementById('progressTrack');
+    track.setAttribute('aria-valuenow', answeredIdx);
+    track.setAttribute('aria-valuetext', 'Pernyataan ' + answeredIdx + ' dari ' + QUESTIONS.length);
+  }
+
+  function currentQuestion(){
+    return QUESTION_BY_ID[ORDER[currentIndex]];
+  }
+
+  /* Item wording ranges from one line to four, so the card used to grow
+     and shrink between statements and the choices shifted under the
+     cursor. Measure the tallest item at the CURRENT width and reserve
+     that much room for every statement, so the card never moves.
+     Re-measured on resize and once the webfont has settled, since both
+     change how the text wraps. */
+  function reserveQuestionHeight(){
+    var textEl = document.getElementById('qText');
+    var width = textEl.getBoundingClientRect().width;
+    if(!width) return;
+
+    var probe = document.createElement('p');
+    probe.className = 'q-text';
+    probe.style.cssText = 'position:absolute; visibility:hidden; pointer-events:none; margin:0; width:' + width + 'px;';
+    textEl.parentNode.appendChild(probe);
+
+    var tallest = 0;
+    QUESTIONS.forEach(function(q){
+      probe.textContent = q.text;
+      if(probe.scrollHeight > tallest) tallest = probe.scrollHeight;
+    });
+    probe.parentNode.removeChild(probe);
+
+    textEl.style.minHeight = Math.ceil(tallest) + 'px';
+  }
+
+  var reserveTimer = null;
+  window.addEventListener('resize', function(){
+    window.clearTimeout(reserveTimer);
+    reserveTimer = window.setTimeout(function(){
+      document.getElementById('qText').style.minHeight = '';
+      reserveQuestionHeight();
+    }, 150);
+  });
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(function(){
+      if(screens.question.classList.contains('active')){
+        document.getElementById('qText').style.minHeight = '';
+        reserveQuestionHeight();
+      }
+    });
+  }
+
+  function renderQuestion(){
+    var q = currentQuestion();
+    document.getElementById('qEyebrow').textContent = 'Pernyataan ' + (currentIndex+1) + ' dari ' + QUESTIONS.length;
+    document.getElementById('qText').textContent = q.text;
+    var choicesEl = document.getElementById('qChoices');
+    choicesEl.innerHTML = '';
+    SCALE_LABELS.forEach(function(label, idx){
+      var val = idx + 1;
+      var chosen = answers[q.id] === val;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'choice' + (chosen ? ' selected' : '');
+      btn.setAttribute('data-value', val);
+      btn.setAttribute('role', 'radio');
+      btn.setAttribute('aria-checked', chosen ? 'true' : 'false');
+      btn.innerHTML = '<span class="bullet"></span><span>' + label + '</span><span class="num mono">' + val + '</span>';
+      btn.addEventListener('click', function(){ selectAnswer(q, val); });
+      choicesEl.appendChild(btn);
+    });
+    document.getElementById('btnBack').disabled = false;
+    updateProgress();
+    /* keyboard and screen-reader users would otherwise be dropped on
+       <body> every time the card auto-advances */
+    document.getElementById('qCard').focus({ preventScroll:true });
+  }
+
+  function selectAnswer(q, val){
+    answers[q.id] = val;
+    var choiceButtons = document.querySelectorAll('#qChoices .choice');
+    choiceButtons.forEach(function(b){
+      var isSel = parseInt(b.getAttribute('data-value'),10) === val;
+      b.classList.toggle('selected', isSel);
+      b.setAttribute('aria-checked', isSel ? 'true' : 'false');
+    });
+    window.setTimeout(function(){
+      if(currentIndex < ORDER.length - 1){
+        currentIndex += 1;
+        renderQuestion();
+      } else {
+        goToProcessing();
+      }
+    }, 260);
+  }
+
+  document.addEventListener('keydown', function(e){
+    if(!screens.question.classList.contains('active')) return;
+    if(['1','2','3','4'].indexOf(e.key) !== -1){
+      selectAnswer(currentQuestion(), parseInt(e.key,10));
+    }
+  });
+
+  var PROC_MESSAGES = [
+    "membaca respons anda",
+    "menghitung subscale",
+    "menentukan tiga axis utama",
+    "mengidentifikasi work persona",
+    "menyusun distinctive traits",
+    "menghitung work drive"
+  ];
+
+  function goToProcessing(){
+    showScreen('processing');
+    var line = document.getElementById('procLine');
+    var i = 0;
+    line.textContent = PROC_MESSAGES[0];
+    var interval = window.setInterval(function(){
+      i += 1;
+      if(i < PROC_MESSAGES.length){
+        line.textContent = PROC_MESSAGES[i];
+      }
+    }, 220);
+    window.setTimeout(function(){
+      window.clearInterval(interval);
+      var result = runScoringEngine();
+      renderResults(result);
+      showScreen('results');
+      submitResult(result);
+    }, 1500);
+  }
+
+  /* ============================================================
+     7. RESULTS RENDERING
+     ============================================================ */
+  function fillParas(container, paragraphs){
+    container.innerHTML = '';
+    paragraphs.forEach(function(p){
+      var el = document.createElement('p');
+      el.textContent = p;
+      container.appendChild(el);
+    });
+  }
+
+  function escapeHtml(str){
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
+  function renderResults(r){
+    lastResults = r;
+    var nameEl = document.getElementById('rGreeting');
+    nameEl.innerHTML = participantName
+      ? ('Hi <span class="name-highlight">' + escapeHtml(participantName) + '</span>')
+      : 'Hi there';
+    document.getElementById('rPersonaName').textContent = r.persona.name;
+    document.getElementById('rPersonaTagline').textContent = r.persona.meaning;
+    document.getElementById('rPersonaKeywords').textContent = r.persona.keywords || '';
+
+    fillParas(document.getElementById('rWhatThisMeans'), r.persona.what);
+
+    document.getElementById('rStylePoles').textContent = r.axes.map(function(a){ return a.pole.toUpperCase(); }).join(' • ');
+
+    var axesEl = document.getElementById('rAxes');
+    axesEl.innerHTML = '';
+    r.axes.forEach(function(a){
+      var def = a.def;
+      var caption = a.pole === def.poleHigh ? def.captionHigh : def.captionLow;
+      var leadLow  = a.pole === def.poleLow  ? ' lead' : '';
+      var leadHigh = a.pole === def.poleHigh ? ' lead' : '';
+      var fillLeft = Math.min(50, a.pct);
+      var fillWidth = Math.abs(a.pct - 50);
+      var block = document.createElement('div');
+      block.className = 'axis-block';
+      block.innerHTML =
+        '<div class="axis-title">' + def.label + ' — <span class="pole">' + a.pole + '</span><span class="score mono"> (' + a.pctWin + '%)</span></div>' +
+        '<p class="axis-caption">' + caption + '</p>' +
+        '<div class="axis-track"><div class="axis-fill" style="left:' + fillLeft + '%;width:' + fillWidth + '%"></div><div class="axis-marker" style="left:' + a.pct + '%"></div></div>' +
+        '<div class="axis-labels">' +
+          '<span class="axis-side left' + leadLow + '"><b>' + def.poleLow + ' ' + a.pctLow + '%</b>' +
+            '<span class="raw mono">skor ' + a.poleScores.low.mean.toFixed(2) + '</span></span>' +
+          '<span class="axis-side right' + leadHigh + '"><b>' + a.pctHigh + '% ' + def.poleHigh + '</b>' +
+            '<span class="raw mono">skor ' + a.poleScores.high.mean.toFixed(2) + '</span></span>' +
+        '</div>' +
+        (a.balanced
+          ? '<p class="axis-balanced">Kedua sisi pada aspek ini hampir seimbang. Anda kemungkinan cukup luwes berpindah di antara keduanya sesuai tuntutan situasi, sehingga kecenderungan di atas sebaiknya dibaca sebagai kecondongan tipis, bukan ciri yang menetap.</p>'
+          : '');
+      axesEl.appendChild(block);
+    });
+
+    var traitsEl = document.getElementById('rTraits');
+    traitsEl.innerHTML = '';
+    r.traits.forEach(function(t){
+      var entry = ALL_DICT[t.code][t.bucket];
+      var card = document.createElement('div');
+      card.className = 'trait-card';
+      card.innerHTML =
+        '<div class="trait-label">' + entry.label + '</div>' +
+        '<div class="trait-desc">' + entry.desc + '</div>';
+      traitsEl.appendChild(card);
+    });
+
+    document.getElementById('rFuelType').textContent = r.drive.fuelType;
+    var pctStr = r.drive.pct.toFixed(1) + '%';
+    document.getElementById('rFuelPct').textContent = pctStr;
+    document.getElementById('rFuelFill').style.width = Math.max(0,Math.min(100,r.drive.pct)) + '%';
+    fillParas(document.getElementById('rFuelDesc'), r.driveNarrative);
+
+    var strengthsEl = document.getElementById('rStrengths');
+    strengthsEl.innerHTML = '';
+    r.strengths.forEach(function(s){
+      var li = document.createElement('li');
+      li.textContent = s;
+      strengthsEl.appendChild(li);
+    });
+
+    fillParas(document.getElementById('rChallenges'), r.challenges);
+    fillParas(document.getElementById('rEnvSupport'), r.env.support);
+    fillParas(document.getElementById('rEnvLess'), r.env.less);
+    applyExportAvailability();
+  }
+
+  /* ============================================================
+     8. DATA SUBMISSION (opsional — nonaktif secara bawaan)
+
+     Isi SUBMIT_ENDPOINT dengan URL Google Apps Script Web App (atau
+     endpoint lain yang menerima POST) dan setiap assessment yang selesai
+     akan otomatis dikirim ke sana. Biarkan kosong untuk menonaktifkan.
+
+     Pengiriman sengaja dibuat "fire and forget": kegagalan jaringan tidak
+     boleh menghalangi peserta melihat hasilnya.
+     ============================================================ */
+  var SUBMIT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbydJS7SAdHojRLHnzUR10s5ds8JuVBR67WCVvVbqGHk7nnJnWs1Xxb1aZaZiUdqIa3dEQ/exec';
+
+  /* Kata kunci sederhana yang ikut dikirim dan dicocokkan di sisi Apps
+     Script. Ini BUKAN pengamanan sungguhan — nilainya tetap terbaca di
+     source halaman. Fungsinya hanya menyaring kiriman iseng/salah alamat. */
+  var SUBMIT_TOKEN = 'incendio.workpersona';
+
+  function buildSubmissionPayload(r){
+    var p = {
+      token: SUBMIT_TOKEN,
+      waktu_pengisian: new Date().toISOString(),
+      nama: participantName,
+      jenis_kelamin: participantGender,
+      usia: participantAge,
+      pekerjaan: participantJob,
+      email: participantEmail,
+      nomor_hp: participantPhone,
+      persona: r.persona.name
+    };
+    /* satu kolom per axis: kutub, persentase, dan skor mentah kedua sisi */
+    r.axes.forEach(function(a){
+      var k = a.def.key;
+      p[k + '_pole']      = a.pole;
+      p[k + '_persen']    = a.pctWin;
+      p[k + '_seimbang']  = a.balanced ? 'ya' : 'tidak';
+      p[k + '_skor_' + a.def.poleLow.toLowerCase().replace(/[^a-z]/g,'')]  = a.poleScores.low.mean.toFixed(2);
+      p[k + '_skor_' + a.def.poleHigh.toLowerCase().replace(/[^a-z]/g,'')] = a.poleScores.high.mean.toFixed(2);
+    });
+    p.work_drive        = r.drive.fuelType;
+    p.work_drive_persen = Math.round(r.drive.pct * 10) / 10;
+    p.work_drive_indeks = r.drive.total;
+    /* skor 20 sub-aspek — dibutuhkan bila nanti ingin menyusun norma */
+    Object.keys(r.subscales).forEach(function(code){ p['sub_' + code] = r.subscales[code]; });
+    /* jawaban mentah per item, memakai ID item yang stabil */
+    QUESTIONS.forEach(function(q){ p['item_' + q.id] = answers[q.id]; });
+    return p;
+  }
+
+  function submitResult(r){
+    if(!SUBMIT_ENDPOINT) return;
+    try{
+      window.fetch(SUBMIT_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(buildSubmissionPayload(r))
+      })['catch'](function(){ /* diabaikan dengan sengaja */ });
+    } catch(e){ /* diabaikan dengan sengaja */ }
+  }
+
+  /* ============================================================
+     9. BACK TO TOP — the results page is long, especially on mobile
+     ============================================================ */
+  var toTop = document.getElementById('btnToTop');
+  toTop.addEventListener('click', function(){
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+  window.addEventListener('scroll', function(){
+    var onResults = screens.results.classList.contains('active');
+    toTop.classList.toggle('show', onResults && window.scrollY > 600);
+  }, { passive:true });
+
+  applyExportAvailability();
+
+})();
+</script>
+</body>
+</html>
