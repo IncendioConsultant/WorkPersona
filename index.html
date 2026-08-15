@@ -122,6 +122,9 @@
   }
 
   #screen-welcome{justify-content:center; text-align:left; min-height:80vh;}
+  /* baris teratas halaman awal: rata tengah, tanpa garis pendek */
+  #screen-welcome .eyebrow{justify-content:center; text-align:center;}
+  #screen-welcome .eyebrow::before{display:none;}
   .hero-title{
     font-family:var(--font-display);
     font-weight:600;
@@ -129,17 +132,20 @@
     line-height:1.05;
     letter-spacing:-.01em;
     margin:0 0 22px;
+    text-align:center;
   }
   .hero-title em{
     font-style:italic;
     font-weight:500;
     color:var(--amber-deep);
   }
+  /* lebarnya dibiarkan mengikuti kolom isian di bawahnya agar tepi
+     kanannya sejajar; di layar kecil tidak berpengaruh karena sudah
+     lebih sempit dari batas itu */
   .hero-sub{
     font-size:17px;
     line-height:1.65;
     color:var(--ink-70);
-    max-width:52ch;
     margin:0 0 34px;
   }
 
@@ -163,16 +169,19 @@
 
   .meta-row{
     display:flex; flex-wrap:wrap; gap:10px;
+    justify-content:center;
     margin-bottom:40px;
   }
   .meta-chip{
-    font-family:var(--font-mono);
-    font-size:12px;
-    padding:8px 14px;
-    border:1px solid var(--line);
+    font-family:var(--font-body);   /* lebih terbaca daripada mono */
+    font-size:13.5px;
+    font-weight:500;
+    letter-spacing:.005em;
+    padding:9px 18px;
+    border:1px solid var(--amber-deep);
     border-radius:999px;
-    color:var(--ink-70);
-    background:var(--card);
+    color:#FFFFFF;
+    background:var(--amber-deep);   /* warna yang sama dengan tulisan "Work Persona" */
   }
   .btn{
     font-family:var(--font-body);
@@ -202,6 +211,11 @@
   .btn-ghost:hover{border-color:var(--ink); background:var(--card);}
   .btn:focus-visible{outline:2px solid var(--amber-deep); outline-offset:3px;}
   .btn[disabled]{opacity:.35; cursor:not-allowed; pointer-events:none;}
+  .btn-icon{
+    width:18px; height:18px;
+    flex-shrink:0;
+    display:block;
+  }
 
   .signature-mark{
     margin-top:56px;
@@ -492,7 +506,7 @@
   .section-intro{
     font-size:14.5px;
     line-height:1.65;
-    color:var(--ink-50);
+    color:var(--ink-70);   /* disamakan dengan paragraf lain */
     margin:0 0 20px;
   }
 
@@ -714,10 +728,41 @@
     background:var(--card);
     border:1px solid var(--line);
     border-radius:16px;
-    padding:30px clamp(20px,4vw,32px) 12px;
+    padding:0 clamp(20px,4vw,32px);
   }
-  .faq-section .section-title{margin-bottom:16px; color:var(--amber-deep);}
-  .faq-list{border-top:1px solid var(--line-soft);}
+  /* tingkat pertama: membuka atau menutup seluruh daftar pertanyaan */
+  .faq-master{
+    cursor:pointer;
+    list-style:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:26px 36px 26px 0;
+    position:relative;
+  }
+  .faq-master::-webkit-details-marker{display:none;}
+  .faq-master::marker{content:"";}
+  .faq-master:focus-visible{outline:2px solid var(--amber-deep); outline-offset:4px; border-radius:6px;}
+  .faq-section .section-title{margin:0; color:var(--amber-deep);}
+  .faq-master::after{
+    content:"+";
+    position:absolute;
+    right:2px; top:50%;
+    transform:translateY(-50%);
+    font-size:26px; line-height:1;
+    color:var(--amber-deep);
+  }
+  .faq-section[open] .faq-master::after{content:"−";}
+  .faq-count{
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-50);
+    white-space:nowrap;
+  }
+  @media (max-width:540px){ .faq-count{display:none;} }
+  .faq-list{border-top:1px solid var(--line-soft); padding-bottom:14px;}
   .faq-item{border-bottom:1px solid var(--line-soft);}
   .faq-item summary{
     cursor:pointer;
@@ -762,7 +807,13 @@
     color:var(--amber-deep);
     border:1px solid var(--line);
   }
-  .btn-retake:hover{background:var(--paper-2); border-color:var(--amber-deep);}
+  .btn-retake:hover{
+    background:var(--paper-2);
+    border-color:var(--amber-deep);
+    transform:translateY(-2px);       /* disamakan dengan dua tombol simpan */
+    box-shadow:var(--shadow);
+  }
+  .btn-retake:active{transform:translateY(0);}
 
   footer.app-footer{
     text-align:center;
@@ -844,7 +895,7 @@
 
   <!-- SCREEN 1: WELCOME -->
   <section class="screen active" id="screen-welcome">
-    <div class="eyebrow">Work Persona Assessment</div>
+    <div class="eyebrow">Incendio Consultant · Work Persona Assessment</div>
     <h1 class="hero-title">Discover Your<br><em>Work Persona</em></h1>
     <p class="hero-sub">Dengan assessment ini, Anda akan mendapatkan gambaran mengenai Work Persona, seperti gaya kerja, dorongan kerja, karakteristik yang paling menonjol, kekuatan, potensi tantangan, serta kondisi lingkungan kerja yang dapat membantu Anda bekerja secara optimal.</p>
     <div class="meta-row">
@@ -996,16 +1047,20 @@
     <p class="disclaimer">Catatan: Hasil ini menggambarkan kecenderungan gaya kerja berdasarkan respons Anda pada assessment ini, bukan label kepribadian yang bersifat mutlak atau diagnosis psikologis.</p>
     </div>
 
-    <div class="faq-section">
-      <h3 class="section-title">Frequently Asked Questions</h3>
+    <details class="faq-section">
+      <summary class="faq-master">
+        <h3 class="section-title">Frequently Asked Questions</h3>
+        <span class="faq-count mono">8 pertanyaan</span>
+      </summary>
       <div class="faq-list">
         <details class="faq-item">
           <summary>Apa arti persentase pada bagian Your Work Style?</summary>
-          <p>Persentase menunjukkan posisi Anda di antara dua sisi pada satu aspek, dan keduanya selalu berjumlah 100%. Misalnya Directing 66% dan Self-Directed 34% berarti cara kerja Anda condong ke sisi Directing — bukan berarti Anda "66% seorang pemimpin". Angka skor di bawahnya adalah rata-rata jawaban Anda pada masing-masing sisi, dalam skala 1 sampai 4. Bila kedua sisi hampir seimbang, Anda akan melihat keterangan tambahan pada aspek tersebut; artinya Anda cukup luwes berpindah di antara keduanya, dan kecenderungan yang tertera sebaiknya dibaca sebagai kecondongan tipis.</p>
+          <p>Persentase menunjukkan seberapa condong cara kerja Anda ke salah satu dari dua sisi dalam setiap aspek. Kedua sisi selalu berjumlah 100%. Misalnya, Directing 66% dan Self-Directed 34% berarti cara kerja Anda lebih condong ke sisi Directing. Angka skor di bawahnya menunjukkan rata-rata jawaban Anda pada masing-masing sisi, dengan skala 1–4.</p>
+          <p>Jika skor kedua sisi cukup berdekatan, Anda akan melihat keterangan tambahan pada aspek tersebut. Ini menunjukkan bahwa Anda cukup fleksibel dalam menggunakan kedua cara kerja sehingga kecenderungan yang ditampilkan sebaiknya dipahami sebagai kecenderungan yang relatif tipis.</p>
         </details>
         <details class="faq-item">
           <summary>Kalau saya masuk ke satu persona, apakah berarti saya tidak memiliki karakteristik persona lain?</summary>
-          <p>Tidak. Persona menunjukkan kecenderungan gaya kerja yang paling menonjol dari jawaban Anda. Anda tetap memiliki karakteristik persona lain dengan kadar yang berbeda-beda. Hasil ini menggambarkan kecenderungan utama Anda, bukan batasan atas kemampuan maupun cara Anda bekerja.</p>
+          <p>Persona menunjukkan kecenderungan gaya kerja yang paling menonjol dari jawaban Anda. Anda tetap memiliki karakteristik dari persona lain dengan kadar yang berbeda-beda. Hasil ini membantu menggambarkan pola kerja yang paling sering muncul dalam diri Anda.</p>
         </details>
         <details class="faq-item">
           <summary>Apakah ada persona yang lebih baik daripada persona lainnya?</summary>
@@ -1013,38 +1068,61 @@
         </details>
         <details class="faq-item">
           <summary>Apakah persona saya bisa berubah?</summary>
-          <p>Bisa, tetapi umumnya tidak berubah drastis dalam waktu singkat. Pengalaman kerja, tuntutan peran, dan perkembangan diri dapat memengaruhi cara Anda bekerja, sehingga kecenderungan persona Anda dapat bergeser seiring waktu. Mengisi ulang assessment dalam waktu berdekatan pun dapat memberi hasil yang sedikit berbeda, terutama pada aspek yang skornya hampir seimbang.</p>
+          <p>Bisa, tetapi umumnya tidak berubah drastis dalam waktu singkat. Pengalaman kerja, tuntutan peran, dan perkembangan diri dapat memengaruhi cara Anda bekerja sehingga kecenderungan persona Anda dapat berubah seiring berjalannya waktu. Mengisi ulang assessment dalam waktu berdekatan pun dapat memberi hasil yang sedikit berbeda, terutama pada aspek yang skornya hampir seimbang.</p>
         </details>
         <details class="faq-item">
           <summary>Mengapa hasil ini terasa belum sepenuhnya menggambarkan diri saya?</summary>
-          <p>Hal ini wajar. Persona adalah ringkasan dari kecenderungan yang paling menonjol, sehingga tidak mungkin memuat seluruh sisi diri Anda dalam setiap situasi. Hasilnya juga bergantung pada cara Anda menjawab: bila sebagian jawaban menggambarkan diri yang Anda inginkan alih-alih kebiasaan Anda sehari-hari, gambarannya dapat bergeser. Selain itu, jika skor kedua sisi pada suatu aspek hampir seimbang, wajar apabila Anda merasa cocok dengan kedua-duanya.</p>
+          <p>Hal ini wajar. Persona merangkum kecenderungan gaya kerja yang paling menonjol sehingga sebagian sisi diri Anda mungkin belum tergambarkan. Hasil persona juga dipengaruhi oleh cara Anda menjawab. Jika jawaban lebih menggambarkan cara Anda ingin bekerja daripada kebiasaan sehari-hari yang sebenarnya, hasilnya dapat berbeda.</p>
+          <p>Jika skor kedua sisi hampir seimbang, Anda mungkin merasa cocok dengan keduanya. Hal ini menunjukkan bahwa Anda cukup fleksibel dalam menggunakan kedua cara kerja tersebut.</p>
         </details>
         <details class="faq-item">
           <summary>Apa arti Work Drive pada hasil saya?</summary>
-          <p>Work Drive menggambarkan intensitas dorongan kerja Anda: seberapa besar energi, usaha, dan ketekunan yang biasanya Anda curahkan untuk mencapai tujuan. Hasilnya ditampilkan sebagai Driven atau Steady. Driven berarti Anda cenderung bekerja dengan intensitas tinggi dan terdorong oleh target, sedangkan Steady berarti Anda cenderung menjaga ritme yang stabil dan berkelanjutan. Keduanya bukan penilaian rajin atau malas, melainkan gambaran ritme kerja yang paling alami bagi Anda.</p>
+          <p>Work Drive menggambarkan intensitas dan ritme kerja Anda, termasuk seberapa besar energi, usaha, dan dorongan yang biasanya Anda gunakan untuk mencapai tujuan. Hasilnya ditampilkan sebagai Driven atau Steady.</p>
+          <p>Driven menunjukkan kecenderungan bekerja dengan intensitas tinggi dan terdorong oleh target, sedangkan Steady menunjukkan kecenderungan menjaga ritme kerja yang stabil dan berkelanjutan. Keduanya menggambarkan cara kerja yang berbeda sesuai dengan kecenderungan alami Anda.</p>
         </details>
         <details class="faq-item">
           <summary>Apakah hasil assessment ini bisa dipakai untuk menentukan diterima atau tidaknya seseorang dalam suatu pekerjaan?</summary>
-          <p>Sebaiknya tidak dijadikan satu-satunya dasar keputusan. Hasil ini lebih tepat digunakan sebagai informasi tambahan untuk memahami gaya kerja, cara berkolaborasi, dan arah pengembangan seseorang — dilengkapi wawancara, penilaian kompetensi, serta rekam jejak kerjanya.</p>
+          <p>Hasil assessment ini sebaiknya digunakan sebagai salah satu informasi dalam proses pengambilan keputusan, jadi bukan sebagai satu-satunya dasar pengambilan keputusan. Hasilnya dapat membantu memahami gaya kerja, cara berkolaborasi, dan kebutuhan pengembangan seseorang, lalu dilengkapi dengan wawancara, penilaian kompetensi, serta metode lainnya.</p>
         </details>
         <details class="faq-item">
           <summary>Apakah saya hanya bisa bekerja dengan baik di lingkungan kerja yang mendukung persona saya?</summary>
           <p>Tidak. Lingkungan kerja yang disebutkan bukan syarat agar Anda dapat berkinerja baik, melainkan kondisi yang umumnya paling mendukung gaya kerja alami Anda. Di lingkungan yang berbeda, Anda tetap dapat beradaptasi dan bekerja secara efektif sesuai tuntutan peran maupun situasi.</p>
         </details>
       </div>
-    </div>
+    </details>
 
     <div class="results-actions">
-      <button class="btn btn-primary" id="btnSavePdf">Simpan sebagai PDF</button>
-      <button class="btn btn-ghost" id="btnSaveImage">Simpan sebagai Gambar</button>
+      <button class="btn btn-primary" id="btnSavePdf">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+          <path d="M14 3v5h5"/>
+          <path d="M9 13.5h6M9 17h4"/>
+        </svg>
+        <span>Simpan sebagai PDF</span>
+      </button>
+      <button class="btn btn-primary" id="btnSaveImage">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <rect x="3" y="4.5" width="18" height="15" rx="2.5"/>
+          <circle cx="8.75" cy="10" r="1.6"/>
+          <path d="M21 15.5l-4.5-4.5L5.5 19.5"/>
+        </svg>
+        <span>Simpan sebagai Gambar</span>
+      </button>
     </div>
     <p class="export-note" id="exportNote"></p>
     <div class="retake-wrap">
-      <button class="btn btn-retake" id="btnRetake">Isi Ulang Assessment</button>
+      <button class="btn btn-retake" id="btnRetake">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+        </svg>
+        <span>Isi Ulang Assessment</span>
+      </button>
     </div>
   </section>
 
-  <footer class="app-footer">Work Persona Assessment<div class="app-version mono">v1.0.0</div></footer>
+  <footer class="app-footer">Work Persona Assessment<div class="app-version mono">v1.0.2</div></footer>
 </div>
 
 <button class="to-top" id="btnToTop" aria-label="Kembali ke atas halaman" title="Kembali ke atas">&#8593;</button>
@@ -1931,15 +2009,19 @@
     });
   }
 
+  /* menyimpan innerHTML, bukan textContent — kalau memakai textContent,
+     ikon SVG di dalam tombol akan hilang permanen setelah sekali ditekan */
   function withBusyButton(btn, busyLabel, fn){
-    var original = btn.textContent;
-    btn.textContent = busyLabel;
+    var original = btn.innerHTML;
+    var label = btn.querySelector('span');
+    if(label){ label.textContent = busyLabel; }
+    else { btn.textContent = busyLabel; }
     btn.disabled = true;
     fn().catch(function(err){
       console.error(err);
       window.alert('Gagal memproses. Silakan coba lagi.');
     }).finally(function(){
-      btn.textContent = original;
+      btn.innerHTML = original;
       btn.disabled = false;
     });
   }
