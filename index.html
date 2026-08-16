@@ -272,6 +272,10 @@
   .seg{display:flex; gap:10px;}
   .seg-btn{
     flex:1;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
     font-family:var(--font-body);
     font-size:15px;
     padding:13px 10px;
@@ -289,6 +293,11 @@
     border-color:var(--amber-deep);
     color:var(--amber-deep);
     font-weight:600;
+  }
+  .seg-icon{
+    width:17px; height:17px;
+    flex-shrink:0;
+    pointer-events:none;   /* klik selalu diterima tombolnya, bukan gambarnya */
   }
 
   .instr-title{
@@ -911,8 +920,18 @@
       <div class="field" data-field="gender">
         <label id="genderLabel">Jenis Kelamin <span class="req" aria-hidden="true">*</span></label>
         <div class="seg" id="genderGroup" role="radiogroup" aria-labelledby="genderLabel">
-          <button type="button" class="seg-btn" role="radio" aria-checked="false" data-value="Laki-laki">Laki-laki</button>
-          <button type="button" class="seg-btn" role="radio" aria-checked="false" data-value="Perempuan">Perempuan</button>
+          <button type="button" class="seg-btn" role="radio" aria-checked="false" data-value="Laki-laki">
+            <svg class="seg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <circle cx="10" cy="14" r="6"/><path d="M14.3 9.7L20 4"/><path d="M15 4h5v5"/>
+            </svg>
+            <span>Laki-laki</span>
+          </button>
+          <button type="button" class="seg-btn" role="radio" aria-checked="false" data-value="Perempuan">
+            <svg class="seg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="9" r="6"/><path d="M12 15v6"/><path d="M9 18.5h6"/>
+            </svg>
+            <span>Perempuan</span>
+          </button>
         </div>
         <p class="field-msg"></p>
       </div>
@@ -1122,7 +1141,7 @@
     </div>
   </section>
 
-  <footer class="app-footer">Work Persona Assessment<div class="app-version mono">v1.0.2</div></footer>
+  <footer class="app-footer">Work Persona Assessment<div class="app-version mono">v1.1.1</div></footer>
 </div>
 
 <button class="to-top" id="btnToTop" aria-label="Kembali ke atas halaman" title="Kembali ke atas">&#8593;</button>
@@ -1153,52 +1172,52 @@
      ============================================================ */
   var QUESTIONS = [
     /* --- Structure & Thinking Style : Systematic <-> Fluid --------- */
-    {id:1,  axis:'structure', code:'C', pole:'Systematic', dir: 1, text:"Saya lebih nyaman bekerja ketika tugas dan langkah kerja sudah tersusun dengan jelas."},
-    {id:2,  axis:'structure', code:'C', pole:'Fluid',      dir:-1, text:"Saya lebih nyaman langsung mulai mengerjakan tugas, lalu menyesuaikan cara kerjanya seiring berjalannya waktu."},
-    {id:3,  axis:'structure', code:'D', pole:'Systematic', dir: 1, text:"Saya cenderung memeriksa kembali bagian-bagian penting sebelum menganggap pekerjaan selesai."},
-    {id:4,  axis:'structure', code:'D', pole:'Fluid',      dir:-1, text:"Saya lebih mengutamakan hasil keseluruhan daripada memeriksa setiap detail pekerjaan."},
-    {id:5,  axis:'structure', code:'E', pole:'Systematic', dir: 1, text:"Ketika menghadapi masalah dalam pekerjaan, saya biasanya mempertimbangkan situasi terlebih dahulu sebelum bereaksi."},
-    {id:6,  axis:'structure', code:'E', pole:'Fluid',      dir:-1, text:"Ketika menghadapi situasi yang tidak terduga, saya cenderung mengikuti respons yang muncul secara spontan."},
+    {id:1,  axis:'structure', code:'C', pole:'Systematic', dir: 1, text:"Saya menempatkan segala sesuatunya secara rapi dan teratur."},
+    {id:2,  axis:'structure', code:'C', pole:'Fluid',      dir:-1, text:"Saya biasanya langsung mulai bekerja meskipun langkah-langkahnya belum tersusun dengan jelas."},
+    {id:3,  axis:'structure', code:'D', pole:'Systematic', dir: 1, text:"Saya senang bekerja dengan sangat cermat dan hati-hati."},
+    {id:4,  axis:'structure', code:'D', pole:'Fluid',      dir:-1, text:"Detail kecil sering luput dari perhatian saya."},
+    {id:5,  axis:'structure', code:'E', pole:'Systematic', dir: 1, text:"Ketika pekerjaan tidak berjalan sesuai rencana, saya butuh waktu sejenak sebelum merespons."},
+    {id:6,  axis:'structure', code:'E', pole:'Fluid',      dir:-1, text:"Ketika ada yang mengusik perasaan saya di tempat kerja, orang biasanya bisa langsung melihatnya dari reaksi saya."},
     {id:7,  axis:'structure', code:'R', pole:'Systematic', dir: 1, text:"Sebelum mengambil tindakan, saya biasanya mempertimbangkan beberapa langkah yang mungkin dilakukan."},
-    {id:8,  axis:'structure', code:'R', pole:'Fluid',      dir:-1, text:"Saya lebih suka memahami suatu pekerjaan sambil langsung mencobanya daripada memikirkannya terlalu lama sebelumnya."},
+    {id:8,  axis:'structure', code:'R', pole:'Fluid',      dir:-1, text:"Saya biasanya lebih cepat memahami sesuatu dengan langsung mencoba mengerjakan daripada mempelajarinya terlebih dahulu."},
 
     /* --- Authority & Control : Directing <-> Self-Directed --------- */
-    {id:9,  axis:'authority', code:'F', pole:'Self-Directed', dir:-1, text:"Saya cenderung menyesuaikan cara kerja saya dengan arahan dari atasan yang saya hormati."},
-    {id:10, axis:'authority', code:'F', pole:'Self-Directed', dir:-1, text:"Saya cenderung mengikuti cara kerja yang disarankan atasan ketika menentukan bagaimana pekerjaan dilakukan."},
-    {id:11, axis:'authority', code:'W', pole:'Self-Directed', dir:-1, text:"Saya lebih nyaman ketika batasan dan ekspektasi pekerjaan sudah ditentukan dengan jelas."},
-    {id:12, axis:'authority', code:'W', pole:'Self-Directed', dir: 1, text:"Saya dapat bekerja tanpa banyak arahan selama tujuan pekerjaan sudah jelas."},
+    {id:9,  axis:'authority', code:'F', pole:'Self-Directed', dir:-1, text:"Saya cenderung menyesuaikan cara kerja saya dengan arahan atasan."},
+    {id:10, axis:'authority', code:'F', pole:'Self-Directed', dir:-1, text:"Saya ingin atasan saya menyukai saya."},
+    {id:11, axis:'authority', code:'W', pole:'Self-Directed', dir:-1, text:"Saya lebih nyaman diberi arahan yang rinci daripada dibiarkan menentukan caranya sendiri."},
+    {id:12, axis:'authority', code:'W', pole:'Self-Directed', dir: 1, text:"Saya sering menentukan sendiri cara kerja saya tanpa menunggu arahan."},
     {id:13, axis:'authority', code:'L', pole:'Directing',     dir: 1, text:"Dalam kerja tim, saya nyaman mengambil peran untuk menentukan arah atau pembagian tugas."},
     {id:14, axis:'authority', code:'L', pole:'Directing',     dir: 1, text:"Ketika tim belum menentukan arah, saya cenderung mengambil inisiatif untuk mengarahkannya."},
-    {id:15, axis:'authority', code:'P', pole:'Directing',     dir: 1, text:"Saya lebih nyaman ketika dapat menentukan bagaimana pekerjaan dalam tim dijalankan."},
-    {id:16, axis:'authority', code:'P', pole:'Directing',     dir: 1, text:"Saya cenderung memberikan arahan ketika pekerjaan tim perlu mengikuti standar tertentu."},
-    {id:17, axis:'authority', code:'I', pole:'Directing',     dir: 1, text:"Ketika situasinya sudah cukup jelas, saya cenderung langsung mengambil keputusan."},
+    {id:15, axis:'authority', code:'P', pole:'Directing',     dir: 1, text:"Saya merasa lebih tenang ketika pekerjaan tim dijalankan dengan cara yang saya tentukan."},
+    {id:16, axis:'authority', code:'P', pole:'Directing',     dir: 1, text:"Saya cenderung mendorong orang lain untuk bekerja lebih keras."},
+    {id:17, axis:'authority', code:'I', pole:'Directing',     dir: 1, text:"Saya biasanya tidak butuh waktu lama untuk mengambil keputusan."},
     {id:18, axis:'authority', code:'I', pole:'Self-Directed', dir: 1, text:"Saya biasanya bisa mengambil keputusan tanpa perlu banyak meminta pendapat orang lain."},
-    {id:19, axis:'authority', code:'K', pole:'Directing',     dir: 1, text:"Ketika memiliki alasan yang kuat, saya cenderung tetap mempertahankan pandangan saya."},
-    {id:20, axis:'authority', code:'K', pole:'Directing',     dir: 1, text:"Saya cenderung menyampaikan pendapat ketika ada keputusan atau cara kerja yang menurut saya perlu diubah."},
+    {id:19, axis:'authority', code:'K', pole:'Directing',     dir: 1, text:"Saya cenderung tetap mempertahankan pendapat saya meskipun kebanyakan orang tidak setuju."},
+    {id:20, axis:'authority', code:'K', pole:'Directing',     dir: 1, text:"Saya suka mengatakan kepada orang lain bila mereka salah."},
 
     /* --- Social Orientation : Connector <-> Independent ------------ */
-    {id:21, axis:'social', code:'B', pole:'Connector',   dir: 1, text:"Saya lebih menikmati kegiatan ketika dapat menjadi bagian dari suatu tim."},
-    {id:22, axis:'social', code:'B', pole:'Independent', dir:-1, text:"Saya tetap nyaman bekerja meskipun hanya berinteraksi dengan beberapa orang."},
-    {id:23, axis:'social', code:'O', pole:'Connector',   dir: 1, text:"Saya cenderung membangun hubungan kerja yang cukup dekat dengan orang-orang yang sering bekerja bersama saya."},
-    {id:24, axis:'social', code:'O', pole:'Independent', dir:-1, text:"Saya tidak selalu merasa perlu membangun hubungan yang dekat dengan orang-orang yang bekerja bersama saya."},
+    {id:21, axis:'social', code:'B', pole:'Connector',   dir: 1, text:"Saya suka bergabung ke dalam suatu kelompok."},
+    {id:22, axis:'social', code:'B', pole:'Independent', dir:-1, text:"Saya lebih suka mengerjakan tugas sendiri daripada bersama orang lain."},
+    {id:23, axis:'social', code:'O', pole:'Connector',   dir: 1, text:"Rekan kerja biasanya merasa nyaman bercerita hal pribadi kepada saya."},
+    {id:24, axis:'social', code:'O', pole:'Independent', dir:-1, text:"Saya merasa tidak perlu membangun hubungan yang dekat dengan rekan kerja saya."},
     {id:25, axis:'social', code:'S', pole:'Connector',   dir: 1, text:"Saya cukup mudah memulai percakapan dengan orang yang baru saya kenal."},
-    {id:26, axis:'social', code:'S', pole:'Independent', dir:-1, text:"Saya tidak terlalu membutuhkan banyak interaksi sosial ketika berada di lingkungan baru."},
-    {id:27, axis:'social', code:'X', pole:'Connector',   dir: 1, text:"Saya menikmati kesempatan untuk menyampaikan pendapat ketika berada dalam tim."},
-    {id:28, axis:'social', code:'X', pole:'Independent', dir:-1, text:"Saya tetap nyaman bekerja meskipun kontribusi saya tidak menjadi perhatian utama tim."},
+    {id:26, axis:'social', code:'S', pole:'Independent', dir:-1, text:"Di lingkungan baru, saya cenderung menunggu orang lain menyapa lebih dulu."},
+    {id:27, axis:'social', code:'X', pole:'Connector',   dir: 1, text:"Saya senang kalau orang-orang memperhatikan saya."},
+    {id:28, axis:'social', code:'X', pole:'Independent', dir:-1, text:"Saya lebih suka bekerja di belakang layar daripada menjadi perhatian banyak orang."},
 
     /* --- Work Drive : Driven <-> Steady ---------------------------- */
     {id:29, axis:'drive', code:'A', pole:'Driven', dir: 1, text:"Saya terdorong ketika memiliki target yang menantang untuk dicapai."},
-    {id:30, axis:'drive', code:'A', pole:'Driven', dir: 1, text:"Saya menikmati kesempatan untuk meningkatkan hasil yang sudah saya capai sebelumnya."},
+    {id:30, axis:'drive', code:'A', pole:'Driven', dir: 1, text:"Bagi saya penting untuk mencapai hasil yang lebih baik daripada orang lain."},
     {id:31, axis:'drive', code:'G', pole:'Driven', dir: 1, text:"Saya nyaman dengan pekerjaan yang membutuhkan usaha dan konsentrasi tinggi."},
     {id:32, axis:'drive', code:'G', pole:'Driven', dir: 1, text:"Saya cenderung tetap bertahan mengerjakan tugas meskipun pekerjaannya menguras tenaga."},
     {id:33, axis:'drive', code:'N', pole:'Driven', dir: 1, text:"Saya lebih nyaman menuntaskan suatu pekerjaan sebelum beralih sepenuhnya ke pekerjaan lain."},
-    {id:34, axis:'drive', code:'N', pole:'Driven', dir: 1, text:"Saya cenderung terus mengerjakan suatu tugas sampai benar-benar selesai."},
-    {id:35, axis:'drive', code:'T', pole:'Driven', dir: 1, text:"Saya cenderung bergerak cepat ketika mengerjakan tugas yang sudah saya pahami."},
-    {id:36, axis:'drive', code:'T', pole:'Steady', dir:-1, text:"Saya biasanya menjaga ritme kerja yang stabil daripada terburu-buru menyelesaikan pekerjaan."},
-    {id:37, axis:'drive', code:'V', pole:'Driven', dir: 1, text:"Saya cenderung tetap aktif dan berenergi ketika menjalani berbagai aktivitas."},
-    {id:38, axis:'drive', code:'V', pole:'Steady', dir:-1, text:"Saya lebih nyaman mengatur energi agar dapat mempertahankan ritme kerja dalam waktu yang panjang."},
-    {id:39, axis:'drive', code:'Z', pole:'Driven', dir: 1, text:"Saya tertarik mencoba cara baru dalam mengerjakan sesuatu."},
-    {id:40, axis:'drive', code:'Z', pole:'Steady', dir:-1, text:"Saya lebih nyaman menggunakan pendekatan yang sudah saya kenal selama hasilnya masih baik."}
+    {id:34, axis:'drive', code:'N', pole:'Driven', dir: 1, text:"Saya sulit berhenti sebelum pekerjaan yang saya mulai benar-benar selesai."},
+    {id:35, axis:'drive', code:'T', pole:'Driven', dir: 1, text:"Biasanya saya tergesa-gesa dalam melakukan sesuatu."},
+    {id:36, axis:'drive', code:'T', pole:'Steady', dir:-1, text:"Saya lebih suka bekerja dengan tempo yang tenang daripada cepat."},
+    {id:37, axis:'drive', code:'V', pole:'Driven', dir: 1, text:"Saya masih punya banyak tenaga untuk beraktivitas setelah jam kerja selesai."},
+    {id:38, axis:'drive', code:'V', pole:'Steady', dir:-1, text:"Saya mudah merasa lelah kalau harus beraktivitas seharian penuh."},
+    {id:39, axis:'drive', code:'Z', pole:'Driven', dir: 1, text:"Saya cepat bosan kalau mengerjakan hal yang sama berulang-ulang."},
+    {id:40, axis:'drive', code:'Z', pole:'Steady', dir:-1, text:"Saya lebih memilih cara yang sudah biasa saya pakai daripada mencoba cara baru."}
   ];
 
   var QUESTION_BY_ID = {};
@@ -1931,10 +1950,22 @@
     return true;
   }
 
+  /* Nama berkas: WorkPersona_<Nama Peserta>
+     Karakter yang dilarang oleh sistem berkas dibuang, spasi berlebih
+     dirapikan, dan panjangnya dibatasi agar tidak menyulitkan saat diunduh. */
+  /* Nama berkas: WorkPersona_<Nama Peserta>
+     Karakter yang dilarang sistem berkas dibuang, spasi ganda dirapikan,
+     tanda hubung pada nama seperti "Anna-Maria" tetap dipertahankan. */
   function fileBaseName(){
-    var n = participantName ? participantName.trim().replace(/\s+/g,'-').toLowerCase() : 'hasil';
-    return 'work-persona-' + n;
+    var n = (participantName || '')
+      .replace(/[\\\/:*?"<>|]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 60)
+      .trim();
+    return 'WorkPersona_' + (n || 'Hasil');
   }
+
 
   /* Mobile browsers cap how large a canvas may be — iOS Safari refuses
      anything past roughly 8000px on a side (and limits total area), and
