@@ -882,6 +882,34 @@
   .to-top:hover{transform:translateY(-2px); border-color:var(--amber-deep); color:var(--amber-deep);}
   .to-top:focus-visible{outline:2px solid var(--amber-deep); outline-offset:3px;}
 
+  /* tampilan gambar hasil (dipakai di iPhone/iPad) */
+  .img-modal{
+    position:fixed; inset:0; z-index:60;
+    display:none;
+    background:rgba(18,32,58,.72);
+    backdrop-filter:blur(3px);
+    padding:18px;
+  }
+  .img-modal.show{display:flex; align-items:center; justify-content:center;}
+  .img-modal-inner{
+    display:flex; flex-direction:column; gap:14px;
+    width:100%; max-width:520px; max-height:100%;
+  }
+  .img-modal-note{
+    margin:0; text-align:center;
+    font-size:14.5px; line-height:1.55;
+    color:#FFFFFF;
+  }
+  .img-modal-note b{color:var(--amber-soft);}
+  .img-modal-scroll{
+    flex:1; min-height:0; overflow:auto;
+    -webkit-overflow-scrolling:touch;
+    background:var(--paper);
+    border-radius:12px;
+  }
+  .img-modal-scroll img{display:block; width:100%; height:auto;}
+  #imgModalClose{align-self:center;}
+
   @media (max-width:600px){
     .topbar{padding:14px 18px;}
     .screen{padding:34px 18px 70px;}
@@ -1141,10 +1169,20 @@
     </div>
   </section>
 
-  <footer class="app-footer">Work Persona Assessment<div class="app-version mono">v1.1.1</div></footer>
+  <footer class="app-footer">Work Persona Assessment<div class="app-version mono">v1.1.2</div></footer>
 </div>
 
 <button class="to-top" id="btnToTop" aria-label="Kembali ke atas halaman" title="Kembali ke atas">&#8593;</button>
+
+<!-- Tampilan gambar hasil untuk iPhone/iPad, tempat pengguna menekan-tahan
+     gambar lalu memilih "Simpan ke Foto". -->
+<div class="img-modal" id="imgModal" role="dialog" aria-modal="true" aria-labelledby="imgModalNote">
+  <div class="img-modal-inner">
+    <p class="img-modal-note" id="imgModalNote">Tekan dan tahan gambar di bawah, lalu pilih <b>Simpan ke Foto</b>.</p>
+    <div class="img-modal-scroll"><img id="imgModalImg" alt="Hasil Work Persona Anda"></div>
+    <button class="btn btn-primary" id="imgModalClose">Selesai</button>
+  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1972,9 +2010,17 @@
      silently hands back a blank bitmap instead of an error. The results
      page is several thousand pixels tall, so at 3x it would blow straight
      past that. Scale down just enough to stay inside a safe budget. */
+  function isIOS(){
+    var ua = navigator.userAgent || '';
+    return /iPad|iPhone|iPod/.test(ua) ||
+           (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1); /* iPadOS 13+ */
+  }
+
   function safeCaptureScale(width, height, dpr){
-    var MAX_DIM = 8000;
-    var MAX_AREA = 16777216;
+    /* Safari iOS jauh lebih ketat daripada browser lain: kanvas yang
+       sisinya melewati sekitar 4096px dikembalikan kosong tanpa error. */
+    var MAX_DIM  = isIOS() ? 4096 : 8000;
+    var MAX_AREA = isIOS() ? 12000000 : 16777216;
     var desired = Math.min(3, Math.max(2, dpr * 2));
     var scale = Math.min(
       desired,
@@ -2057,16 +2103,73 @@
     });
   }
 
+  /* canvas -> Blob. toDataURL() menghasilkan satu string base64 raksasa
+     (puluhan MB untuk gambar sepanjang ini); Safari iOS berpindah halaman
+     ke alamat "data:" itu lalu gagal menyimpannya tanpa pesan apa pun.
+     Blob jauh lebih ringan dan tidak memindahkan halaman. */
+  function canvasToBlob(canvas){
+    return new Promise(function(resolve, reject){
+      if(canvas.toBlob){
+        canvas.toBlob(function(blob){
+          blob ? resolve(blob) : reject(new Error('kanvas kosong'));
+        }, 'image/png');
+        return;
+      }
+      try{
+        var d = canvas.toDataURL('image/png');
+        var bin = window.atob(d.split(',')[1]);
+        var arr = new Uint8Array(bin.length);
+        for(var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        resolve(new Blob([arr], { type:'image/png' }));
+      } catch(e){ reject(e); }
+    });
+  }
+
+  /* Di iPhone/iPad, mengunduh berkas dari halaman web sering gagal diam-diam.
+     Menampilkan gambarnya lalu meminta pengguna menekan-tahan untuk menyimpan
+     ke Foto adalah jalur yang selalu berhasil di iOS. */
+  var imgModal      = document.getElementById('imgModal');
+  var imgModalImg   = document.getElementById('imgModalImg');
+  var imgModalUrl   = null;
+
+  function closeImageModal(){
+    imgModal.classList.remove('show');
+    imgModalImg.removeAttribute('src');
+    if(imgModalUrl){ URL.revokeObjectURL(imgModalUrl); imgModalUrl = null; }
+  }
+  document.getElementById('imgModalClose').addEventListener('click', closeImageModal);
+  imgModal.addEventListener('click', function(e){ if(e.target === imgModal) closeImageModal(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && imgModal.classList.contains('show')) closeImageModal();
+  });
+
+  function showImageModal(url){
+    imgModalUrl = url;
+    imgModalImg.src = url;
+    imgModal.classList.add('show');
+    document.getElementById('imgModalClose').focus({ preventScroll:true });
+  }
+
   document.getElementById('btnSaveImage').addEventListener('click', function(){
     var btn = this;
     withBusyButton(btn, 'Menyiapkan gambar...', function(){
       return captureResultsCanvas().then(function(canvas){
+        if(!canvas || !canvas.width || !canvas.height) throw new Error('kanvas kosong');
+        return canvasToBlob(canvas);
+      }).then(function(blob){
+        if(!blob || blob.size < 2000) throw new Error('gambar gagal dibuat');
+        var url = URL.createObjectURL(blob);
+        if(isIOS()){
+          showImageModal(url);
+          return;
+        }
         var link = document.createElement('a');
         link.download = fileBaseName() + '.png';
-        link.href = canvas.toDataURL('image/png', 1.0);
+        link.href = url;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        window.setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
       });
     });
   });
