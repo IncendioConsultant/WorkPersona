@@ -882,6 +882,88 @@
   .to-top:hover{transform:translateY(-2px); border-color:var(--amber-deep); color:var(--amber-deep);}
   .to-top:focus-visible{outline:2px solid var(--amber-deep); outline-offset:3px;}
 
+  /* ==========================================================
+     KARTU HASIL — dirender di luar layar pada ukuran tetap
+     1080 x 1350 (rasio 4:5), lalu dipotret menjadi PNG.
+     Semua ukuran memakai piksel tetap agar hasilnya identik
+     baik dipotret dari komputer maupun dari ponsel.
+     ========================================================== */
+  .share-card{
+    position:fixed; left:-99999px; top:0;
+    width:1080px; height:1350px;
+    background:var(--paper);
+    overflow:hidden;
+    font-family:var(--font-body); color:var(--ink);
+    padding:74px 76px 62px;
+    display:flex; flex-direction:column;
+    pointer-events:none;
+  }
+  .share-card::before{
+    content:""; position:absolute; inset:0;
+    background-image:linear-gradient(rgba(18,32,58,.045) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(18,32,58,.045) 1px,transparent 1px);
+    background-size:90px 90px;
+  }
+  .share-card > *{position:relative;}
+
+  .sc-brand{font-family:var(--font-mono); font-weight:600; font-size:20px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--amber-deep); text-align:center;}
+  .sc-name{font-family:var(--font-display); font-weight:700; font-size:108px; line-height:1;
+    letter-spacing:-.02em; text-align:center; margin-top:26px;}
+  .sc-tag{font-family:var(--font-display); font-style:italic; font-weight:400; font-size:29px;
+    line-height:1.5; color:var(--amber-deep); text-align:center; margin:18px auto 0; max-width:790px;}
+  .sc-keys{font-family:var(--font-mono); font-size:16px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--ink-50); text-align:center; margin-top:18px;}
+  .sc-rule{height:1px; background:var(--line); margin:34px 0 0;}
+
+  .sc-axis{margin-top:32px;}
+  .sc-axis-lab{font-family:var(--font-mono); font-weight:600; font-size:16px; letter-spacing:.15em;
+    text-transform:uppercase; color:var(--ink-50);}
+  .sc-axis-win{font-family:var(--font-display); font-weight:600; font-size:37px; line-height:1.1;
+    color:var(--amber-deep); margin-top:6px;}
+  .sc-axis-win span{font-family:var(--font-mono); font-weight:600; font-size:28px;
+    color:var(--ink); margin-left:8px;}
+  .sc-meter{position:relative; height:10px; border-radius:5px;
+    background:rgba(18,32,58,.13); margin:18px 0 10px;}
+  .sc-meter::before{content:""; position:absolute; left:50%; top:-6px; bottom:-6px;
+    width:1px; background:var(--ink-50); opacity:.4;}
+  .sc-fill{position:absolute; top:0; height:100%; border-radius:5px; background:var(--amber);}
+  .sc-knob{position:absolute; top:50%; width:22px; height:22px; border-radius:50%;
+    background:#FFFFFF; border:4px solid var(--amber-deep);
+    transform:translate(-50%,-50%); box-shadow:0 2px 6px rgba(18,32,58,.28);}
+  .sc-ends{display:flex; justify-content:space-between;
+    font-family:var(--font-mono); font-size:16.5px; color:var(--ink-50);}
+  .sc-ends b{font-weight:600; color:var(--ink-70);}
+  .sc-ends .lead, .sc-ends .lead b{color:var(--amber-deep);}
+
+  .sc-boxes{display:flex; gap:20px; margin-top:32px;}
+  .sc-box{background:#FFFFFF; border:1px solid var(--line); border-radius:18px;
+    height:252px; padding:26px 28px;}
+  .sc-box-lab{font-family:var(--font-mono); font-weight:600; font-size:15px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--ink-50); text-align:center;}
+  .sc-drive{width:252px; flex:none; display:flex; flex-direction:column; text-align:center;}
+  .sc-drive-body{margin:auto 0;}
+  .sc-drive-val{font-family:var(--font-display); font-weight:700; font-size:46px;
+    text-transform:uppercase; line-height:1;}
+  .sc-drive-pct{font-family:var(--font-mono); font-weight:600; font-size:40px;
+    color:var(--amber-deep); margin-top:12px;}
+  .sc-traits{flex:1; display:flex; flex-direction:column;}
+  .sc-trait-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;
+    margin:auto 0; align-content:center;}
+  .sc-chip{font-family:var(--font-body); font-weight:600; font-size:18.5px; line-height:1.25;
+    padding:12px 20px; border-radius:999px; background:var(--amber-soft); color:var(--amber-deep);
+    text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .sc-chip.solo{grid-column:1 / -1; justify-self:center;}
+  /* lima trait butuh tiga baris — chip dikecilkan agar tetap berjarak dari judul kotak */
+  .sc-trait-grid.dense{gap:9px;}
+  .sc-trait-grid.dense .sc-chip{font-size:16px; padding:9px 16px;}
+
+  .sc-foot{margin-top:auto; padding-top:26px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family:var(--font-mono); font-size:17px; color:var(--ink-50);}
+  .sc-foot b{font-weight:600; color:var(--ink-70);}
+  .sc-org{font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--amber-deep);}
+
   /* tampilan gambar hasil (dipakai di iPhone/iPad) */
   .img-modal{
     position:fixed; inset:0; z-index:60;
@@ -1169,10 +1251,38 @@
     </div>
   </section>
 
-  <footer class="app-footer">Work Persona Assessment<div class="app-version mono">v1.1.2</div></footer>
+  <footer class="app-footer">Work Persona Assessment<div class="app-version mono">v1.2.0</div></footer>
 </div>
 
 <button class="to-top" id="btnToTop" aria-label="Kembali ke atas halaman" title="Kembali ke atas">&#8593;</button>
+
+<!-- Kartu hasil untuk dibagikan. Dirender di luar layar lalu dipotret;
+     tidak pernah terlihat langsung oleh peserta. -->
+<div class="share-card" id="shareCard" aria-hidden="true">
+  <div class="sc-brand">Work Persona</div>
+  <div class="sc-name" id="scName"></div>
+  <div class="sc-tag" id="scTag"></div>
+  <div class="sc-keys" id="scKeys"></div>
+  <div class="sc-rule"></div>
+  <div id="scAxes"></div>
+  <div class="sc-boxes">
+    <div class="sc-box sc-drive">
+      <div class="sc-box-lab">Work Drive</div>
+      <div class="sc-drive-body">
+        <div class="sc-drive-val" id="scDriveVal"></div>
+        <div class="sc-drive-pct" id="scDrivePct"></div>
+      </div>
+    </div>
+    <div class="sc-box sc-traits">
+      <div class="sc-box-lab">Distinctive Traits</div>
+      <div class="sc-trait-grid" id="scTraits"></div>
+    </div>
+  </div>
+  <div class="sc-foot">
+    <span><b id="scPerson"></b> · <span id="scDate"></span></span>
+    <span class="sc-org">Incendio Consultant</span>
+  </div>
+</div>
 
 <!-- Tampilan gambar hasil untuk iPhone/iPad, tempat pengguna menekan-tahan
      gambar lalu memilih "Simpan ke Foto". -->
@@ -2031,58 +2141,110 @@
     return Math.max(0.75, scale);   /* degrade rather than fail outright */
   }
 
+  /* ============================================================
+     KARTU HASIL
+
+     Ekspor gambar tidak lagi memotret seluruh halaman hasil. Halaman
+     itu menghasilkan gambar setinggi ribuan piksel dengan rasio sekitar
+     1:5,5 — melewati batas kanvas Safari iOS, dan terlalu ramping untuk
+     dibagikan di WhatsApp maupun Instagram.
+
+     Sebagai gantinya, sebuah kartu 1080 x 1350 (rasio 4:5) disusun dari
+     hasil peserta lalu dipotret. Ukurannya tetap, jadi hasilnya sama
+     persis baik diunduh dari komputer maupun dari ponsel.
+     ============================================================ */
+  var BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni',
+                  'Juli','Agustus','September','Oktober','November','Desember'];
+  function tanggalHariIni(){
+    var d = new Date();
+    return d.getDate() + ' ' + BULAN_ID[d.getMonth()] + ' ' + d.getFullYear();
+  }
+
+  function buildShareCard(r){
+    document.getElementById('scName').textContent = r.persona.name;
+    document.getElementById('scTag').textContent  = r.persona.meaning;
+    document.getElementById('scKeys').textContent = r.persona.keywords || '';
+
+    var axesEl = document.getElementById('scAxes');
+    axesEl.innerHTML = '';
+    r.axes.forEach(function(a){
+      var def = a.def;
+      var fillLeft = Math.min(50, a.pct);
+      var fillWidth = Math.abs(a.pct - 50);
+      var lowWins = (a.pole === def.poleLow);
+      var block = document.createElement('div');
+      block.className = 'sc-axis';
+      block.innerHTML =
+        '<div class="sc-axis-lab">' + def.label + '</div>' +
+        '<div class="sc-axis-win">' + a.pole + '<span>' + a.pctWin + '%</span></div>' +
+        '<div class="sc-meter">' +
+          '<span class="sc-fill" style="left:' + fillLeft + '%;width:' + fillWidth + '%"></span>' +
+          '<span class="sc-knob" style="left:' + a.pct + '%"></span>' +
+        '</div>' +
+        '<div class="sc-ends">' +
+          (lowWins
+            ? '<span class="lead"><b>' + def.poleLow + ' ' + a.pctLow + '%</b></span>'
+            : '<span>' + def.poleLow + ' <b>' + a.pctLow + '%</b></span>') +
+          (lowWins
+            ? '<span>' + def.poleHigh + ' <b>' + a.pctHigh + '%</b></span>'
+            : '<span class="lead"><b>' + def.poleHigh + ' ' + a.pctHigh + '%</b></span>') +
+        '</div>';
+      axesEl.appendChild(block);
+    });
+
+    document.getElementById('scDriveVal').textContent = r.drive.fuelType;
+    document.getElementById('scDrivePct').textContent = Math.round(r.drive.pct) + '%';
+
+    /* susunan rapi: dua kolom, dan bila jumlahnya ganjil chip terakhir
+       merentang penuh lalu ditengahkan. Lima trait memakai chip lebih
+       kecil agar tidak menempel pada judul kotak. */
+    var grid = document.getElementById('scTraits');
+    grid.innerHTML = '';
+    grid.className = 'sc-trait-grid' + (r.traits.length >= 5 ? ' dense' : '');
+    r.traits.forEach(function(t, i){
+      var chip = document.createElement('span');
+      chip.className = 'sc-chip' +
+        ((r.traits.length % 2 === 1 && i === r.traits.length - 1) ? ' solo' : '');
+      chip.textContent = ALL_DICT[t.code][t.bucket].label;
+      grid.appendChild(chip);
+    });
+
+    document.getElementById('scPerson').textContent = participantName || 'Peserta';
+    document.getElementById('scDate').textContent   = tanggalHariIni();
+
+    fitShareCard();
+  }
+
+  /* Pengaman tinggi. Tagline persona ada yang dua baris dan ada yang tiga,
+     dan teksnya bisa saja diubah di kemudian hari. Kalau isi kartu sampai
+     melewati 1350px, ukuran tagline diturunkan bertahap sampai muat, supaya
+     footer tidak pernah terpotong. */
+  function fitShareCard(){
+    var card = document.getElementById('shareCard');
+    var tag  = document.getElementById('scTag');
+    tag.style.fontSize = '';
+    var size = 29;
+    while(card.scrollHeight > 1350 && size > 19){
+      size -= 1.5;
+      tag.style.fontSize = size + 'px';
+    }
+  }
+
   function captureResultsCanvas(){
-    var target = document.getElementById('resultsPrintable');
-    var paperColor = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim() || '#F6F3EC';
-    var dpr = window.devicePixelRatio || 1;
-    var prev = {
-      padding: target.style.padding,
-      background: target.style.background,
-      boxSizing: target.style.boxSizing,
-      width: target.style.width,
-      maxWidth: target.style.maxWidth
-    };
-    var prevBodyOverflow = document.body.style.overflowX;
-
-    target.style.boxSizing = 'border-box';
-    target.style.padding = '56px 44px';
-    target.style.background = paperColor;
-
-    /* On a phone the results column is only ~330px wide, so a straight
-       capture yields an extremely tall sliver that also exceeds the canvas
-       size cap. Lay the capture out at a comfortable reading width instead:
-       the saved image then has sane proportions AND fits the budget. */
-    if(window.innerWidth < 800){
-      target.style.width = '760px';
-      target.style.maxWidth = 'none';
-      document.body.style.overflowX = 'hidden';
-    }
-
-    /* measured only after the width override, so the reflow is accounted for */
-    var capW = target.scrollWidth, capH = target.scrollHeight;
-
-    function restore(){
-      target.style.padding = prev.padding;
-      target.style.background = prev.background;
-      target.style.boxSizing = prev.boxSizing;
-      target.style.width = prev.width;
-      target.style.maxWidth = prev.maxWidth;
-      document.body.style.overflowX = prevBodyOverflow;
-    }
-
-    return html2canvas(target, {
-      scale: safeCaptureScale(capW, capH, dpr),
-      width: capW,
-      windowWidth: Math.max(capW, window.innerWidth),
+    if(!lastResults) throw new Error('hasil belum tersedia');
+    buildShareCard(lastResults);
+    var card = document.getElementById('shareCard');
+    var paperColor = getComputedStyle(document.documentElement)
+                       .getPropertyValue('--paper').trim() || '#F6F3EC';
+    return html2canvas(card, {
+      width: 1080,
+      height: 1350,
+      windowWidth: 1200,
+      windowHeight: 1500,
+      scale: safeCaptureScale(1080, 1350, 1),
       backgroundColor: paperColor,
       useCORS: true,
       logging: false
-    }).then(function(canvas){
-      restore();
-      return canvas;
-    }, function(err){
-      restore();
-      throw err;
     });
   }
 
