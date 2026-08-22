@@ -903,13 +903,106 @@
     max-width:72ch;
   }
 
+  /* --- halaman pustaka persona ------------------------------------- */
+  /* Seluruh teks di halaman pustaka dibuat rata kanan kiri. Penyukuan
+     otomatis diaktifkan agar celah antar kata tidak melebar di layar
+     sempit. */
+  .lib-intro p, .lib-body p{
+    text-align:justify;
+    -webkit-hyphens:auto; hyphens:auto;
+    overflow-wrap:break-word;
+  }
+  .lib-intro p{
+    font-size:15px; line-height:1.75; color:var(--ink-70);
+    margin:0 0 14px; max-width:74ch;
+  }
+  .lib-intro strong{color:var(--ink); font-weight:600;}
+  .lib-list{margin:34px 0 0;}
+  .lib-item{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    margin-bottom:12px;
+    overflow:hidden;
+  }
+  .lib-item summary{
+    cursor:pointer;
+    list-style:none;
+    display:block;
+    padding:20px 46px 20px clamp(18px,3.5vw,26px);
+    position:relative;
+  }
+  .lib-item summary::-webkit-details-marker{display:none;}
+  .lib-item summary::marker{content:"";}
+  .lib-item summary:focus-visible{outline:2px solid var(--amber-deep); outline-offset:-3px; border-radius:14px;}
+  .lib-item summary::after{
+    content:"+";
+    position:absolute; right:18px; top:22px;
+    font-size:22px; line-height:1; color:var(--amber-deep);
+  }
+  .lib-item[open] summary::after{content:"\2212";}
+  .lib-name{
+    display:block;
+    font-family:var(--font-display);
+    font-weight:600; font-size:20px;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  .lib-axes{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:11.5px; letter-spacing:.06em;
+    color:var(--ink-50);
+    margin-bottom:4px;
+  }
+  .lib-kw{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--amber-deep);
+  }
+  .lib-you{
+    display:inline-block;
+    margin-top:10px;
+    background:var(--amber-deep);
+    color:#FFFFFF;
+    font-family:var(--font-mono);
+    font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+    padding:5px 11px; border-radius:999px;
+  }
+  /* persona milik peserta ditandai dengan bingkai emas */
+  .lib-item.is-you{
+    border:2px solid var(--amber-deep);
+    box-shadow:0 12px 30px -22px rgba(143,100,39,.7);
+  }
+  .lib-body{
+    padding:0 clamp(18px,3.5vw,26px) 8px;
+    border-top:1px solid var(--line-soft);
+  }
+  .lib-body p{
+    font-size:14.5px; line-height:1.7; color:var(--ink-70);
+    margin:16px 0; max-width:74ch;
+  }
+  /* Warna sage, supaya jelas berbeda dari tombol simpan (navy) maupun
+     tombol isi ulang (emas). */
+  .library-wrap{display:flex; justify-content:center; margin:44px 0 0;}
+  .btn-library{
+    background:var(--sage-soft);
+    color:#41563C;
+    border:1px solid rgba(110,135,104,.45);
+  }
+  .btn-library:hover{transform:translateY(-2px); box-shadow:var(--shadow);}
+  .btn-library:active{transform:translateY(0);}
+  .btn-library:focus-visible{outline:2px solid var(--sage); outline-offset:2px;}
+
+  /* Jarak antara ketiga kelompok tombol dibuat sama besar. */
   .results-actions{
-    display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:44px 0 0;
+    display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:18px 0 0;
   }
   .retake-wrap{
     display:flex; justify-content:center;
-    margin:16px 0 10px;
-    padding-top:16px;
+    margin:18px 0 10px;
+    padding-top:0;
   }
   .btn-retake{
     background:var(--amber-soft);
@@ -1331,6 +1424,15 @@
       </div>
     </details>
 
+    <div class="library-wrap">
+      <button class="btn btn-library" id="btnLibrary">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H5.5A1.5 1.5 0 0 1 4 15.5z"/>
+          <path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H14a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h4.5a1.5 1.5 0 0 0 1.5-1.5z"/>
+        </svg>
+        <span>Pelajari Semua Persona</span>
+      </button>
+    </div>
     <div class="results-actions">
       <button class="btn btn-primary" id="btnSavePdf">
         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
@@ -1362,7 +1464,24 @@
     </div>
   </section>
 
-  <footer class="app-footer">Work Persona Assessment<div class="app-version mono">v1.3.0</div></footer>
+  <!-- SCREEN 5: PUSTAKA PERSONA -->
+  <section class="screen" id="screen-library">
+    <div class="q-head">
+      <button class="btn btn-back" id="btnLibraryBack">Back</button>
+    </div>
+    <div class="eyebrow">Work Persona</div>
+    <h2 class="instr-title">Delapan Work Persona</h2>
+    <div class="lib-intro">
+      <p>Work Persona terbentuk dari kombinasi tiga aspek. Pertama, bagaimana seseorang memandang dan menggunakan kewenangan serta kendali dalam bekerja (<strong>Directing</strong> atau <strong>Self-Directed</strong>). Kedua, bagaimana ia menata pekerjaan dan proses berpikirnya (<strong>Systematic</strong> atau <strong>Fluid</strong>). Ketiga, bagaimana ia berinteraksi dengan orang lain di tempat kerja (<strong>Connector</strong> atau <strong>Independent</strong>).</p>
+      <p>Kombinasi dari ketiga aspek tersebut menghasilkan delapan persona. Tidak ada persona yang lebih baik daripada persona lainnya. Setiap persona memiliki cara tersendiri dalam memberikan kontribusi, kondisi kerja yang dapat menunjang performanya, serta tantangan yang perlu dikelola.</p>
+    </div>
+    <div class="lib-list" id="libList"></div>
+    <div class="retake-wrap">
+      <button class="btn btn-back" id="btnLibraryBackBottom">Back</button>
+    </div>
+  </section>
+
+  <footer class="app-footer">Work Persona Assessment<div class="app-version mono">v1.4.0</div></footer>
 </div>
 
 <button class="to-top" id="btnToTop" aria-label="Kembali ke atas halaman" title="Kembali ke atas">&#8593;</button>
@@ -1728,6 +1847,80 @@
     }
   };
 
+  /* ------------------------------------------------------------
+     3b. PUSTAKA PERSONA
+     Materi halaman "Pelajari Semua Persona". Isinya diringkas dari
+     PERSONAS di atas, jadi tidak boleh bertentangan dengan hasil
+     individual yang diterima peserta. Urutannya sengaja mengikuti
+     kombinasi aksis, bukan abjad.
+     ------------------------------------------------------------ */
+  var PERSONA_LIBRARY = [
+    { key:"Directing|Systematic|Connector", name:"Orchestrator",
+      axes:"Directing · Systematic · Connector",
+      keywords:"Alignment · Direction · Integration",
+      paras:[
+        "Orchestrator adalah seseorang yang menyelaraskan arah, orang, dan proses agar semuanya bergerak menuju tujuan yang sama. Ia nyaman mengambil kendali sekaligus menjaga keteraturan cara kerja tim. Ia tidak hanya menentukan arah, tetapi juga memastikan prosesnya berjalan rapi dan orang-orang di dalamnya tetap terhubung.",
+        "Kekuatan utamanya terletak pada kemampuan membangun koordinasi lintas fungsi dengan pendekatan yang terstruktur. Ia cenderung berkembang paling baik di lingkungan yang melibatkan banyak pihak, di mana ia diberi ruang untuk menetapkan struktur kerja sekaligus menjaga arah tim tetap selaras.",
+        "Tantangan yang perlu dikelola adalah kecenderungan untuk terlibat di terlalu banyak bagian proses sekaligus. Ia juga dapat merasa berat ketika harus mengambil keputusan tegas yang berpotensi mengganggu keharmonisan hubungan."
+      ] },
+    { key:"Directing|Systematic|Independent", name:"Builder",
+      axes:"Directing · Systematic · Independent",
+      keywords:"Structure · System · Effectiveness",
+      paras:[
+        "Builder adalah seseorang yang membangun arah, struktur, dan sistem kerja agar orang lain dapat bekerja secara lebih efektif. Ia nyaman menentukan arah dan merancang sistem yang rapi, namun lebih memilih menjalankannya secara mandiri daripada bergantung pada keterlibatan kelompok yang intens.",
+        "Baginya, hasil kerja yang baik lahir dari struktur yang jelas dan otonomi untuk menjalankannya sesuai standar sendiri. Ia berkembang paling baik dalam peran yang menuntutnya merancang proses atau standar kerja, lalu menjalankannya dengan kewenangan yang cukup besar.",
+        "Tantangan yang perlu dikelola adalah kecenderungan terlalu fokus pada sistem sehingga kurang mengundang masukan orang lain. Ia juga terbiasa menjalankan segala sesuatu seorang diri, padahal kolaborasi dapat mempercepat hasil."
+      ] },
+    { key:"Directing|Fluid|Connector", name:"Initiator",
+      axes:"Directing · Fluid · Connector",
+      keywords:"Initiative · Momentum · Change",
+      paras:[
+        "Initiator adalah seseorang yang memicu perubahan, menggerakkan ide, dan menciptakan momentum untuk mendorong sesuatu menjadi nyata. Ia cepat mengambil inisiatif dan nyaman mengajak orang lain bertindak, sambil tetap fleksibel dalam cara mencapai hasil. Baginya, momentum lebih penting daripada kesempurnaan proses.",
+        "Ia cenderung berkembang paling baik di lingkungan yang dinamis dan terbuka terhadap eksperimen. Di tim seperti itu, kontribusinya dalam memulai sesuatu dihargai sama besarnya dengan hasil akhirnya.",
+        "Tantangan yang perlu dikelola adalah kecenderungan mengabaikan detail proses dan struktur jangka panjang demi kecepatan. Ia juga dapat kurang sabar terhadap prosedur yang lambat, padahal sebagian situasi memang membutuhkan kehati-hatian yang lebih besar."
+      ] },
+    { key:"Directing|Fluid|Independent", name:"Navigator",
+      axes:"Directing · Fluid · Independent",
+      keywords:"Direction · Uncertainty · Exploration",
+      paras:[
+        "Navigator adalah seseorang yang membuka jalan di tengah ketidakpastian dan menemukan arah ketika belum ada peta yang jelas. Ia nyaman mengambil kendali dalam situasi yang belum jelas arahnya dan memilih menjalaninya dengan caranya sendiri, tanpa bergantung pada struktur atau kelompok yang mapan.",
+        "Ketidakpastian baginya bukan hal yang perlu dihindari, melainkan ruang untuk bereksplorasi. Ia berkembang paling baik ketika diberi otonomi tinggi dan berada di lingkungan yang menghargai keberanian mengambil risiko serta belajar dari percobaan yang belum tentu berhasil.",
+        "Tantangan yang perlu dikelola adalah kecenderungan bergerak sendiri sehingga sulit diprediksi oleh rekan kerja. Ia juga cenderung kurang mengomunikasikan rencananya kepada pihak lain."
+      ] },
+    { key:"Self-Directed|Systematic|Connector", name:"Coordinator",
+      axes:"Self-Directed · Systematic · Connector",
+      keywords:"Consistency · Stability · Continuity",
+      paras:[
+        "Coordinator adalah seseorang yang menjaga keteraturan, konsistensi, dan keberlangsungan proses maupun tim. Ia nyaman bekerja di dalam struktur dan arah yang sudah jelas tanpa merasa perlu menjadi pihak yang menetapkannya. Ia berkontribusi dengan memastikan pekerjaan tetap terorganisasi, informasi tersampaikan dengan baik, dan hubungan kerja berjalan positif.",
+        "Ia berkembang paling baik di lingkungan yang memiliki standar dan ekspektasi yang jelas, dengan dokumentasi yang rapi serta waktu yang cukup untuk bekerja teliti. Atasan dan rekan yang mudah dihubungi untuk memberi arahan juga membantunya bekerja dengan lebih percaya diri.",
+        "Tantangan yang perlu dikelola adalah kecenderungan menuntut ketepatan sampai pekerjaan memakan waktu lebih lama. Ia juga terbiasa menerjemahkan sendiri arahan yang belum jelas, alih-alih meminta konfirmasi lebih awal."
+      ] },
+    { key:"Self-Directed|Systematic|Independent", name:"Craftsman",
+      axes:"Self-Directed · Systematic · Independent",
+      keywords:"Expertise · Precision · Quality",
+      paras:[
+        "Craftsman adalah seseorang yang menghasilkan karya berkualitas melalui ketelitian, keahlian, dan penguasaan terhadap pekerjaannya. Ia bekerja secara fokus dan mendalam dengan standar yang rapi, tanpa banyak bergantung pada keterlibatan kelompok. Ia bekerja paling baik ketika ekspektasi terhadap hasil kerjanya sudah jelas sejak awal.",
+        "Baginya, kualitas lahir dari penguasaan mendalam terhadap satu bidang. Ia berkembang paling baik di lingkungan yang menghargai keahlian dan memberi ruang untuk menekuni sesuatu secara mendalam, dibandingkan lingkungan yang menuntutnya terus berpindah tugas.",
+        "Tantangan yang perlu dikelola adalah ritme kerjanya yang dapat memperlambat tim ketika ia ingin memastikan segalanya sesuai standar. Ia juga cenderung tenggelam dalam pekerjaannya sendiri sampai jarang menyuarakan kebutuhannya akan kejelasan atau bantuan."
+      ] },
+    { key:"Self-Directed|Fluid|Connector", name:"Facilitator",
+      axes:"Self-Directed · Fluid · Connector",
+      keywords:"Connection · Collaboration · Bridging",
+      paras:[
+        "Facilitator adalah seseorang yang menjembatani perbedaan perspektif dan membantu individu maupun tim berkolaborasi secara efektif. Ia nyaman mengikuti arah yang ada sambil tetap fleksibel dalam caranya, dan menaruh perhatian besar pada kualitas hubungan dengan orang-orang di sekitarnya.",
+        "Baginya, pekerjaan berjalan lebih baik ketika orang-orang di dalamnya merasa nyaman dan prosesnya dapat menyesuaikan diri dengan kebutuhan yang berubah. Ia berkembang paling baik di lingkungan yang kolaboratif, luwes, dan menghargai hubungan interpersonal yang positif.",
+        "Tantangan yang perlu dikelola adalah kecenderungan mengutamakan keharmonisan sampai menunda keputusan yang sebenarnya perlu segera diambil. Ia juga dapat merasa kurang nyaman ketika harus mengikuti struktur yang sangat kaku dalam waktu lama."
+      ] },
+    { key:"Self-Directed|Fluid|Independent", name:"Explorer",
+      axes:"Self-Directed · Fluid · Independent",
+      keywords:"Curiosity · Learning · Experimentation",
+      paras:[
+        "Explorer adalah seseorang yang mengeksplorasi kemungkinan baru, belajar dari pengalaman, dan menemukan pendekatan yang lebih efektif. Ia fleksibel dalam pendekatan kerja dan lebih tertarik mencoba cara-cara baru daripada terpaku pada satu jalur yang tetap. Ia cukup nyaman menjalankan arah yang sudah ditetapkan selama masih tersedia ruang untuk menyesuaikan caranya.",
+        "Ia berkembang paling baik ketika tujuan dijelaskan dengan gamblang, namun cara mencapainya tidak dipatok secara sempit. Lingkungan yang menghargai ide baru dan memberi ruang untuk mencoba pendekatan yang belum pernah dilakukan sangat menunjang caranya bekerja.",
+        "Tantangan yang perlu dikelola adalah rasa kurang nyaman terhadap rutinitas yang ketat, sehingga ia dapat terlihat kurang konsisten oleh pihak yang terbiasa dengan proses baku. Ia juga terbiasa menyesuaikan cara kerja sambil berjalan tanpa mengomunikasikannya kepada tim."
+      ] }
+  ];
+
   /* ============================================================
      4. STATE
      ============================================================ */
@@ -2052,7 +2245,8 @@
     instructions: document.getElementById('screen-instructions'),
     question: document.getElementById('screen-question'),
     processing: document.getElementById('screen-processing'),
-    results: document.getElementById('screen-results')
+    results: document.getElementById('screen-results'),
+    library: document.getElementById('screen-library')
   };
 
   /* The progress bar sticks directly beneath the top bar. The top bar's
@@ -2173,6 +2367,56 @@
     currentPage = 0;
     ORDER = buildPresentationOrder();   /* fresh random order each attempt */
     showScreen('welcome');
+  });
+
+  /* ---- pustaka persona ---------------------------------------
+     Halaman referensi yang menjelaskan kedelapan persona. Sengaja
+     berada di luar #resultsPrintable sehingga tidak ikut terbawa ke
+     PDF maupun gambar yang disimpan peserta. */
+  function renderLibrary(){
+    var list = document.getElementById('libList');
+    var mine = lastResults ? lastResults.personaKey : null;
+    list.innerHTML = '';
+    PERSONA_LIBRARY.forEach(function(p){
+      var isMine = (p.key === mine);
+      var item = document.createElement('details');
+      item.className = 'lib-item' + (isMine ? ' is-you' : '');
+      if(isMine) item.open = true;    /* persona peserta terbuka otomatis */
+
+      var sum = document.createElement('summary');
+      var nm = document.createElement('span');
+      nm.className = 'lib-name'; nm.textContent = p.name; sum.appendChild(nm);
+      var ax = document.createElement('span');
+      ax.className = 'lib-axes'; ax.textContent = p.axes; sum.appendChild(ax);
+      var kw = document.createElement('span');
+      kw.className = 'lib-kw'; kw.textContent = p.keywords; sum.appendChild(kw);
+      if(isMine){
+        var tag = document.createElement('span');
+        tag.className = 'lib-you'; tag.textContent = 'Persona Anda';
+        sum.appendChild(tag);
+      }
+      item.appendChild(sum);
+
+      var body = document.createElement('div');
+      body.className = 'lib-body';
+      p.paras.forEach(function(t){
+        var para = document.createElement('p');
+        para.textContent = t;
+        body.appendChild(para);
+      });
+      item.appendChild(body);
+      list.appendChild(item);
+    });
+  }
+
+  document.getElementById('btnLibrary').addEventListener('click', function(){
+    renderLibrary();
+    showScreen('library');
+  });
+  ['btnLibraryBack','btnLibraryBackBottom'].forEach(function(id){
+    document.getElementById(id).addEventListener('click', function(){
+      showScreen('results');
+    });
   });
 
   /* ============================================================
